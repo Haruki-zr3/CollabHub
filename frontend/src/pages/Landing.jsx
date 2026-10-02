@@ -1,46 +1,38 @@
 import React, { useState } from 'react';
-import type { Navigate } from '../types';
 import { Zap, ArrowRight, Users, CheckCircle, Star, BookOpen, Lightbulb, Globe, MessageSquare, ChevronRight } from 'lucide-react';
 import { Button, Badge } from '../components/ui';
-
 const features = [
-  { icon: <Lightbulb className="w-5 h-5" />, color: 'bg-amber-50 text-amber-600', title: 'Post Academic Problems', desc: 'Share research questions, technical challenges, and project needs that you cannot solve alone.' },
-  { icon: <Users className="w-5 h-5" />, color: 'bg-indigo-50 text-indigo-600', title: 'Smart Collaborator Matching', desc: 'Our algorithm matches you with students based on skills, availability, and academic compatibility.' },
-  { icon: <CheckCircle className="w-5 h-5" />, color: 'bg-emerald-50 text-emerald-600', title: 'Structured Workspaces', desc: 'Collaborate in dedicated project workspaces with tasks, discussions, files, and progress tracking.' },
-  { icon: <Globe className="w-5 h-5" />, color: 'bg-sky-50 text-sky-600', title: 'Cross-Department Collaboration', desc: 'Break silos between SMVDU departments. Connect CSE students with Mechanical engineers, or Math with ECE.' },
-  { icon: <Star className="w-5 h-5" />, color: 'bg-violet-50 text-violet-600', title: 'Contribution Tracking', desc: 'Build a verifiable academic portfolio. Every solved problem and contribution is tracked on your profile.' },
-  { icon: <MessageSquare className="w-5 h-5" />, color: 'bg-pink-50 text-pink-600', title: 'Integrated Communication', desc: 'Built-in messaging keeps all your collaboration conversations organized in one place.' },
+    { icon: <Lightbulb className="w-5 h-5"/>, color: 'bg-amber-50 text-amber-600', title: 'Post Academic Problems', desc: 'Share research questions, technical challenges, and project needs that you cannot solve alone.' },
+    { icon: <Users className="w-5 h-5"/>, color: 'bg-indigo-50 text-indigo-600', title: 'Smart Collaborator Matching', desc: 'Our algorithm matches you with students based on skills, availability, and academic compatibility.' },
+    { icon: <CheckCircle className="w-5 h-5"/>, color: 'bg-emerald-50 text-emerald-600', title: 'Structured Workspaces', desc: 'Collaborate in dedicated project workspaces with tasks, discussions, files, and progress tracking.' },
+    { icon: <Globe className="w-5 h-5"/>, color: 'bg-sky-50 text-sky-600', title: 'Cross-Department Collaboration', desc: 'Break silos between SMVDU departments. Connect CSE students with Mechanical engineers, or Math with ECE.' },
+    { icon: <Star className="w-5 h-5"/>, color: 'bg-violet-50 text-violet-600', title: 'Contribution Tracking', desc: 'Build a verifiable academic portfolio. Every solved problem and contribution is tracked on your profile.' },
+    { icon: <MessageSquare className="w-5 h-5"/>, color: 'bg-pink-50 text-pink-600', title: 'Integrated Communication', desc: 'Built-in messaging keeps all your collaboration conversations organized in one place.' },
 ];
-
 const steps = [
-  { n: '01', title: 'Post Your Problem', desc: 'Describe your academic or technical challenge, add required skills, and set a collaboration deadline.' },
-  { n: '02', title: 'Find Your Team', desc: 'Review matched collaborator profiles, check compatibility scores, and invite the right people.' },
-  { n: '03', title: 'Build Together', desc: 'Work in a shared workspace with Kanban boards, file sharing, and real-time discussion threads.' },
+    { n: '01', title: 'Post Your Problem', desc: 'Describe your academic or technical challenge, add required skills, and set a collaboration deadline.' },
+    { n: '02', title: 'Find Your Team', desc: 'Review matched collaborator profiles, check compatibility scores, and invite the right people.' },
+    { n: '03', title: 'Build Together', desc: 'Work in a shared workspace with Kanban boards, file sharing, and real-time discussion threads.' },
 ];
-
 const testimonials = [
-  { name: 'Priya Patel', branch: 'ECE, Year 2 · SMVDU', quote: 'CollabHub helped me find a CS student to work on my IoT project in less than a week. The skill matching is surprisingly accurate.', initials: 'PP', color: '#7C3AED' },
-  { name: 'Rohan Kumar', branch: 'Mechanical Engineering, Year 4 · SMVDU', quote: 'I solved a structural simulation problem that had been stuck for months by collaborating with a CS student through CollabHub. Game changer.', initials: 'RK', color: '#059669' },
-  { name: 'Sneha Reddy', branch: 'Mathematics, Year 3 · SMVDU', quote: 'The workspace feature is excellent. We managed our entire research paper through CollabHub — tasks, discussions, files, everything in one place.', initials: 'SR', color: '#DC2626' },
+    { name: 'Priya Patel', branch: 'ECE, Year 2 · SMVDU', quote: 'CollabHub helped me find a CS student to work on my IoT project in less than a week. The skill matching is surprisingly accurate.', initials: 'PP', color: '#7C3AED' },
+    { name: 'Rohan Kumar', branch: 'Mechanical Engineering, Year 4 · SMVDU', quote: 'I solved a structural simulation problem that had been stuck for months by collaborating with a CS student through CollabHub. Game changer.', initials: 'RK', color: '#059669' },
+    { name: 'Sneha Reddy', branch: 'Mathematics, Year 3 · SMVDU', quote: 'The workspace feature is excellent. We managed our entire research paper through CollabHub — tasks, discussions, files, everything in one place.', initials: 'SR', color: '#DC2626' },
 ];
-
 const sampleProblems = [
-  { title: 'ML Model for Crop Disease Detection', branch: 'CS × Agriculture', skills: ['Python', 'TensorFlow', 'CV'], status: 'open', collab: '2/4' },
-  { title: 'IoT Campus Energy Monitoring', branch: 'ECE × CS', skills: ['IoT', 'ESP32', 'React'], status: 'open', collab: '1/3' },
-  { title: 'NLP for Code-Switching Detection', branch: 'CS × Linguistics', skills: ['PyTorch', 'NLP', 'HuggingFace'], status: 'in-progress', collab: '2/3' },
+    { title: 'ML Model for Crop Disease Detection', branch: 'CS × Agriculture', skills: ['Python', 'TensorFlow', 'CV'], status: 'open', collab: '2/4' },
+    { title: 'IoT Campus Energy Monitoring', branch: 'ECE × CS', skills: ['IoT', 'ESP32', 'React'], status: 'open', collab: '1/3' },
+    { title: 'NLP for Code-Switching Detection', branch: 'CS × Linguistics', skills: ['PyTorch', 'NLP', 'HuggingFace'], status: 'in-progress', collab: '2/3' },
 ];
-
-export default function Landing({ navigate }: { navigate: Navigate }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  return (
-    <div className="min-h-screen bg-white">
+export default function Landing({ navigate }) {
+    const [menuOpen, setMenuOpen] = useState(false);
+    return (<div className="min-h-screen bg-white">
       {/* Nav */}
       <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center gap-8">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white" />
+              <Zap className="w-4 h-4 text-white"/>
             </div>
             <span className="font-bold text-slate-900 font-display text-base">CollabHub</span>
           </div>
@@ -79,16 +71,14 @@ export default function Landing({ navigate }: { navigate: Navigate }) {
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-20 max-w-3xl mx-auto">
             {[
-              { v: '340+', l: 'SMVDU students' },
-              { v: '180+', l: 'Problems solved' },
-              { v: '8', l: 'Departments' },
-              { v: '95%', l: 'Success rate' },
-            ].map(stat => (
-              <div key={stat.l} className="text-center">
+            { v: '340+', l: 'SMVDU students' },
+            { v: '180+', l: 'Problems solved' },
+            { v: '8', l: 'Departments' },
+            { v: '95%', l: 'Success rate' },
+        ].map(stat => (<div key={stat.l} className="text-center">
                 <p className="text-3xl font-bold text-indigo-600 font-display">{stat.v}</p>
                 <p className="text-sm text-slate-500 mt-1">{stat.l}</p>
-              </div>
-            ))}
+              </div>))}
           </div>
         </div>
       </section>
@@ -101,8 +91,7 @@ export default function Landing({ navigate }: { navigate: Navigate }) {
             <h2 className="text-4xl font-bold text-slate-900 font-display">Collaborate in three steps</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {steps.map((step, i) => (
-              <div key={i} className="relative">
+            {steps.map((step, i) => (<div key={i} className="relative">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg font-display shrink-0">
                     {step.n}
@@ -112,13 +101,10 @@ export default function Landing({ navigate }: { navigate: Navigate }) {
                     <p className="text-slate-600 text-sm leading-relaxed">{step.desc}</p>
                   </div>
                 </div>
-                {i < 2 && (
-                  <div className="hidden md:block absolute top-6 left-full w-8 flex items-center justify-center">
-                    <ChevronRight className="w-5 h-5 text-slate-300 -ml-3" />
-                  </div>
-                )}
-              </div>
-            ))}
+                {i < 2 && (<div className="hidden md:block absolute top-6 left-full w-8 flex items-center justify-center">
+                    <ChevronRight className="w-5 h-5 text-slate-300 -ml-3"/>
+                  </div>)}
+              </div>))}
           </div>
         </div>
       </section>
@@ -131,15 +117,13 @@ export default function Landing({ navigate }: { navigate: Navigate }) {
             <h2 className="text-4xl font-bold text-slate-900 font-display">Everything you need to collaborate</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-md hover:border-slate-300 transition-all">
+            {features.map((f, i) => (<div key={i} className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-md hover:border-slate-300 transition-all">
                 <div className={`w-10 h-10 rounded-xl ${f.color} flex items-center justify-center mb-4`}>
                   {f.icon}
                 </div>
                 <h3 className="font-semibold text-slate-900 font-display mb-2">{f.title}</h3>
                 <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
+              </div>))}
           </div>
         </div>
       </section>
@@ -157,25 +141,21 @@ export default function Landing({ navigate }: { navigate: Navigate }) {
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {sampleProblems.map((p, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md hover:border-indigo-200 transition-all cursor-pointer" onClick={() => { navigate('register'); }}>
+            {sampleProblems.map((p, i) => (<div key={i} className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md hover:border-indigo-200 transition-all cursor-pointer" onClick={() => { navigate('register'); }}>
                 <div className="flex items-start justify-between mb-3">
                   <span className={`text-xs font-medium px-2 py-0.5 rounded-full ring-1 ring-inset ${p.status === 'open' ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-indigo-50 text-indigo-700 ring-indigo-200'}`}>
                     ● {p.status === 'open' ? 'Open' : 'In Progress'}
                   </span>
                   <span className="text-xs text-slate-500 flex items-center gap-1">
-                    <Users className="w-3 h-3" /> {p.collab}
+                    <Users className="w-3 h-3"/> {p.collab}
                   </span>
                 </div>
                 <h3 className="font-semibold text-slate-900 font-display mb-1 leading-snug">{p.title}</h3>
                 <p className="text-xs text-slate-500 mb-3">{p.branch}</p>
                 <div className="flex flex-wrap gap-1">
-                  {p.skills.map(s => (
-                    <span key={s} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{s}</span>
-                  ))}
+                  {p.skills.map(s => (<span key={s} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{s}</span>))}
                 </div>
-              </div>
-            ))}
+              </div>))}
           </div>
         </div>
       </section>
@@ -187,12 +167,9 @@ export default function Landing({ navigate }: { navigate: Navigate }) {
             <h2 className="text-4xl font-bold text-slate-900 font-display">SMVDU students love CollabHub</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-slate-200 p-6">
+            {testimonials.map((t, i) => (<div key={i} className="bg-white rounded-2xl border border-slate-200 p-6">
                 <div className="flex mb-3">
-                  {Array.from({ length: 5 }).map((_, j) => (
-                    <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                  ))}
+                  {Array.from({ length: 5 }).map((_, j) => (<Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400"/>))}
                 </div>
                 <p className="text-slate-700 text-sm leading-relaxed mb-5">"{t.quote}"</p>
                 <div className="flex items-center gap-3">
@@ -204,8 +181,7 @@ export default function Landing({ navigate }: { navigate: Navigate }) {
                     <p className="text-xs text-slate-500">{t.branch}</p>
                   </div>
                 </div>
-              </div>
-            ))}
+              </div>))}
           </div>
         </div>
       </section>
@@ -232,7 +208,7 @@ export default function Landing({ navigate }: { navigate: Navigate }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
-                <Zap className="w-3.5 h-3.5 text-white" />
+                <Zap className="w-3.5 h-3.5 text-white"/>
               </div>
               <span className="font-bold text-white font-display text-sm">CollabHub · SMVDU</span>
             </div>
@@ -240,6 +216,5 @@ export default function Landing({ navigate }: { navigate: Navigate }) {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>);
 }

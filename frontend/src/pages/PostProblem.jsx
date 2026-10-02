@@ -1,43 +1,39 @@
 import React, { useState } from 'react';
-import type { Navigate } from '../types';
 import { Button, Input, Textarea, Select } from '../components/ui';
 import { ArrowLeft, Plus, X, CheckCircle, Lightbulb } from 'lucide-react';
-
 const allSkills = ['Python', 'JavaScript', 'React', 'Node.js', 'Machine Learning', 'TensorFlow', 'PyTorch', 'NLP', 'Computer Vision', 'Data Analysis', 'SQL', 'R', 'Arduino', 'IoT', 'MATLAB', 'ANSYS', 'SolidWorks', 'AutoCAD', 'C++', 'Java', 'Android', 'Flutter', 'AWS', 'Docker', 'Git', 'Signal Processing', 'UI/UX Design', 'Bioinformatics', 'HuggingFace', 'Embedded C'];
 const branches = ['Computer Science', 'Electronics & Communication', 'Mechanical Engineering', 'Civil Engineering', 'Chemical Engineering', 'Data Science', 'Biotechnology', 'Physics', 'Mathematics', 'Cross-disciplinary'];
-
-export default function PostProblem({ navigate }: { navigate: Navigate }) {
-  const [form, setForm] = useState({
-    title: '',
-    description: '',
-    branch: '',
-    type: '',
-    difficulty: '',
-    deadline: '',
-    collaboratorsNeeded: '2',
-  });
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [step, setStep] = useState(1);
-
-  function set(k: string, v: string) { setForm(f => ({ ...f, [k]: v })); }
-  function toggleSkill(s: string) { setSelectedSkills(ss => ss.includes(s) ? ss.filter(x => x !== s) : [...ss, s]); }
-  function addTag() { if (tagInput.trim() && !tags.includes(tagInput.trim())) { setTags(ts => [...ts, tagInput.trim()]); setTagInput(''); } }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => { setLoading(false); setSuccess(true); }, 1200);
-  }
-
-  if (success) {
-    return (
-      <div className="p-6 max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center">
+export default function PostProblem({ navigate }) {
+    const [form, setForm] = useState({
+        title: '',
+        description: '',
+        branch: '',
+        type: '',
+        difficulty: '',
+        deadline: '',
+        collaboratorsNeeded: '2',
+    });
+    const [selectedSkills, setSelectedSkills] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [tagInput, setTagInput] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [step, setStep] = useState(1);
+    function set(k, v) { setForm(f => ({ ...f, [k]: v })); }
+    function toggleSkill(s) { setSelectedSkills(ss => ss.includes(s) ? ss.filter(x => x !== s) : [...ss, s]); }
+    function addTag() { if (tagInput.trim() && !tags.includes(tagInput.trim())) {
+        setTags(ts => [...ts, tagInput.trim()]);
+        setTagInput('');
+    } }
+    function handleSubmit(e) {
+        e.preventDefault();
+        setLoading(true);
+        setTimeout(() => { setLoading(false); setSuccess(true); }, 1200);
+    }
+    if (success) {
+        return (<div className="p-6 max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center">
         <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mb-6">
-          <CheckCircle className="w-8 h-8 text-emerald-500" />
+          <CheckCircle className="w-8 h-8 text-emerald-500"/>
         </div>
         <h2 className="text-2xl font-bold text-slate-900 font-display mb-2">Problem posted!</h2>
         <p className="text-slate-500 mb-8">Your problem is now live. Collaborators matching your requirements will be notified.</p>
@@ -45,21 +41,17 @@ export default function PostProblem({ navigate }: { navigate: Navigate }) {
           <Button variant="outline" onClick={() => navigate('my-problems')}>View My Problems</Button>
           <Button onClick={() => navigate('discover')}>Browse All Problems</Button>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="p-6 max-w-3xl mx-auto">
+      </div>);
+    }
+    return (<div className="p-6 max-w-3xl mx-auto">
       <button onClick={() => navigate('discover')} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors mb-6 group">
-        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform"/>
         Back
       </button>
 
       {/* Step indicator */}
       <div className="flex items-center gap-2 mb-8">
-        {[1, 2, 3].map(i => (
-          <React.Fragment key={i}>
+        {[1, 2, 3].map(i => (<React.Fragment key={i}>
             <div className={`flex items-center gap-2 ${i <= step ? 'text-indigo-600' : 'text-slate-400'}`}>
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold ${i < step ? 'bg-indigo-600 text-white' : i === step ? 'bg-indigo-100 text-indigo-700 ring-2 ring-indigo-300' : 'bg-slate-100 text-slate-500'}`}>
                 {i < step ? '✓' : i}
@@ -68,35 +60,20 @@ export default function PostProblem({ navigate }: { navigate: Navigate }) {
                 {i === 1 ? 'Basic Info' : i === 2 ? 'Skills & Tags' : 'Review'}
               </span>
             </div>
-            {i < 3 && <div className={`flex-1 h-px ${i < step ? 'bg-indigo-500' : 'bg-slate-200'}`} />}
-          </React.Fragment>
-        ))}
+            {i < 3 && <div className={`flex-1 h-px ${i < step ? 'bg-indigo-500' : 'bg-slate-200'}`}/>}
+          </React.Fragment>))}
       </div>
 
       <form onSubmit={handleSubmit}>
-        {step === 1 && (
-          <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-5 fade-in">
+        {step === 1 && (<div className="bg-white rounded-xl border border-slate-200 p-6 space-y-5 fade-in">
             <div>
               <h2 className="text-xl font-bold text-slate-900 font-display mb-1">Describe your problem</h2>
               <p className="text-sm text-slate-500">Clear descriptions attract better collaborators.</p>
             </div>
 
-            <Input
-              label="Problem title *"
-              value={form.title}
-              onChange={e => set('title', e.target.value)}
-              placeholder="e.g. ML Model for Crop Disease Detection via Smartphone Camera"
-              hint="Be specific and descriptive. Good titles attract 3x more offers to help."
-            />
+            <Input label="Problem title *" value={form.title} onChange={e => set('title', e.target.value)} placeholder="e.g. ML Model for Crop Disease Detection via Smartphone Camera" hint="Be specific and descriptive. Good titles attract 3x more offers to help."/>
 
-            <Textarea
-              label="Description *"
-              value={form.description}
-              onChange={e => set('description', e.target.value)}
-              rows={5}
-              placeholder="Describe the problem, your approach, what kind of collaborators you need, and the expected outcome…"
-              hint="Include: the problem context, your progress so far, what you need help with, and expected deliverables."
-            />
+            <Textarea label="Description *" value={form.description} onChange={e => set('description', e.target.value)} rows={5} placeholder="Describe the problem, your approach, what kind of collaborators you need, and the expected outcome…" hint="Include: the problem context, your progress so far, what you need help with, and expected deliverables."/>
 
             <div className="grid grid-cols-2 gap-4">
               <Select label="Branch / Domain *" value={form.branch} onChange={e => set('branch', e.target.value)}>
@@ -119,34 +96,19 @@ export default function PostProblem({ navigate }: { navigate: Navigate }) {
                 <option>intermediate</option>
                 <option>advanced</option>
               </Select>
-              <Input
-                label="Collaborators needed *"
-                type="number"
-                min="1"
-                max="10"
-                value={form.collaboratorsNeeded}
-                onChange={e => set('collaboratorsNeeded', e.target.value)}
-              />
+              <Input label="Collaborators needed *" type="number" min="1" max="10" value={form.collaboratorsNeeded} onChange={e => set('collaboratorsNeeded', e.target.value)}/>
             </div>
 
-            <Input
-              label="Deadline *"
-              type="date"
-              value={form.deadline}
-              onChange={e => set('deadline', e.target.value)}
-              hint="When do you need this solved by?"
-            />
+            <Input label="Deadline *" type="date" value={form.deadline} onChange={e => set('deadline', e.target.value)} hint="When do you need this solved by?"/>
 
             <div className="flex justify-end">
               <Button onClick={() => setStep(2)} disabled={!form.title || !form.description}>
                 Next: Skills & Tags
               </Button>
             </div>
-          </div>
-        )}
+          </div>)}
 
-        {step === 2 && (
-          <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-6 fade-in">
+        {step === 2 && (<div className="bg-white rounded-xl border border-slate-200 p-6 space-y-6 fade-in">
             <div>
               <h2 className="text-xl font-bold text-slate-900 font-display mb-1">Required skills & tags</h2>
               <p className="text-sm text-slate-500">Selected skills help match your problem with the right collaborators.</p>
@@ -158,55 +120,38 @@ export default function PostProblem({ navigate }: { navigate: Navigate }) {
               </label>
               <div className="flex flex-wrap gap-2">
                 {allSkills.map(skill => {
-                  const active = selectedSkills.includes(skill);
-                  return (
-                    <button
-                      key={skill}
-                      type="button"
-                      onClick={() => toggleSkill(skill)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
-                        active ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-300 hover:border-indigo-400'
-                      }`}
-                    >
+                const active = selectedSkills.includes(skill);
+                return (<button key={skill} type="button" onClick={() => toggleSkill(skill)} className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${active ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-300 hover:border-indigo-400'}`}>
                       {skill}
-                    </button>
-                  );
-                })}
+                    </button>);
+            })}
               </div>
             </div>
 
             <div>
               <label className="text-sm font-medium text-slate-700 block mb-2">Tags</label>
               <div className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  value={tagInput}
-                  onChange={e => setTagInput(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addTag(); } }}
-                  placeholder="Type a tag and press Enter"
-                  className="flex-1 h-9 rounded-lg border border-slate-300 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-                <Button type="button" variant="outline" size="sm" onClick={addTag} icon={<Plus className="w-4 h-4" />}>
+                <input type="text" value={tagInput} onChange={e => setTagInput(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') {
+            e.preventDefault();
+            addTag();
+        } }} placeholder="Type a tag and press Enter" className="flex-1 h-9 rounded-lg border border-slate-300 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+                <Button type="button" variant="outline" size="sm" onClick={addTag} icon={<Plus className="w-4 h-4"/>}>
                   Add
                 </Button>
               </div>
-              {tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {tags.map(tag => (
-                    <span key={tag} className="inline-flex items-center gap-1 bg-slate-100 text-slate-700 text-sm px-3 py-1 rounded-full">
+              {tags.length > 0 && (<div className="flex flex-wrap gap-2">
+                  {tags.map(tag => (<span key={tag} className="inline-flex items-center gap-1 bg-slate-100 text-slate-700 text-sm px-3 py-1 rounded-full">
                       {tag}
                       <button type="button" onClick={() => setTags(ts => ts.filter(t => t !== tag))} className="text-slate-400 hover:text-slate-700">
-                        <X className="w-3 h-3" />
+                        <X className="w-3 h-3"/>
                       </button>
-                    </span>
-                  ))}
-                </div>
-              )}
+                    </span>))}
+                </div>)}
             </div>
 
             {/* Tip */}
             <div className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 flex gap-3">
-              <Lightbulb className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+              <Lightbulb className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5"/>
               <p className="text-sm text-indigo-800">Problems with 4+ specific skills attract 60% more offers to help than vague ones.</p>
             </div>
 
@@ -214,11 +159,9 @@ export default function PostProblem({ navigate }: { navigate: Navigate }) {
               <Button variant="ghost" onClick={() => setStep(1)}>Back</Button>
               <Button onClick={() => setStep(3)}>Review & Post</Button>
             </div>
-          </div>
-        )}
+          </div>)}
 
-        {step === 3 && (
-          <div className="space-y-4 fade-in">
+        {step === 3 && (<div className="space-y-4 fade-in">
             <div className="bg-white rounded-xl border border-slate-200 p-6">
               <h2 className="text-xl font-bold text-slate-900 font-display mb-4">Review your problem</h2>
 
@@ -264,9 +207,7 @@ export default function PostProblem({ navigate }: { navigate: Navigate }) {
                 Publish Problem
               </Button>
             </div>
-          </div>
-        )}
+          </div>)}
       </form>
-    </div>
-  );
+    </div>);
 }

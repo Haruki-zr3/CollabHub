@@ -1,59 +1,59 @@
 import React, { useState } from 'react';
-import type { Navigate } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { Zap, Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { Button, Input } from '../components/ui';
-
-function isSmvduEmail(email: string) {
-  return email.trim().toLowerCase().endsWith('@smvdu.ac.in');
+function isSmvduEmail(email) {
+    return email.trim().toLowerCase().endsWith('@smvdu.ac.in');
 }
-
-export default function Login({ navigate }: { navigate: Navigate }) {
-  const { setUser } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPass, setShowPass] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!email || !password) { setError('Please fill in all fields.'); return; }
-    if (!isSmvduEmail(email)) { setError('Please use your official SMVDU email address (@smvdu.ac.in).'); return; }
-    setError('');
-    setLoading(true);
-    setTimeout(() => {
-      const namePart = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-      setUser({
-        name: namePart,
-        email: email.trim().toLowerCase(),
-        branch: 'Computer Science & Engineering',
-        year: 3,
-        entryNumber: '',
-        bio: '',
-        skills: [],
-        interests: [],
-        availability: 'available',
-        cgpa: null,
-        github: '',
-        linkedin: '',
-        contributions: 0,
-        problemsSolved: 0,
-        collaborations: 0,
-        tasksCompleted: 0,
-      });
-      setLoading(false);
-      navigate('dashboard');
-    }, 1000);
-  }
-
-  return (
-    <div className="min-h-screen bg-slate-50 flex">
+export default function Login({ navigate }) {
+    const { setUser } = useAuth();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPass, setShowPass] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    function handleSubmit(e) {
+        e.preventDefault();
+        if (!email || !password) {
+            setError('Please fill in all fields.');
+            return;
+        }
+        if (!isSmvduEmail(email)) {
+            setError('Please use your official SMVDU email address (@smvdu.ac.in).');
+            return;
+        }
+        setError('');
+        setLoading(true);
+        setTimeout(() => {
+            const namePart = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            setUser({
+                name: namePart,
+                email: email.trim().toLowerCase(),
+                branch: 'Computer Science & Engineering',
+                year: 3,
+                entryNumber: '',
+                bio: '',
+                skills: [],
+                interests: [],
+                availability: 'available',
+                cgpa: null,
+                github: '',
+                linkedin: '',
+                contributions: 0,
+                problemsSolved: 0,
+                collaborations: 0,
+                tasksCompleted: 0,
+            });
+            setLoading(false);
+            navigate('dashboard');
+        }, 1000);
+    }
+    return (<div className="min-h-screen bg-slate-50 flex">
       {/* Left panel */}
       <div className="hidden lg:flex lg:w-1/2 gradient-cta flex-col justify-between p-12">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white" />
+            <Zap className="w-4 h-4 text-white"/>
           </div>
           <span className="font-bold text-white font-display text-base">CollabHub · SMVDU</span>
         </div>
@@ -70,12 +70,10 @@ export default function Login({ navigate }: { navigate: Navigate }) {
           </div>
         </div>
         <div className="grid grid-cols-3 gap-4">
-          {[['340+', 'SMVDU Students'], ['180+', 'Problems Solved'], ['95%', 'Success Rate']].map(([v, l]) => (
-            <div key={l} className="bg-white/10 rounded-xl p-4">
+          {[['340+', 'SMVDU Students'], ['180+', 'Problems Solved'], ['95%', 'Success Rate']].map(([v, l]) => (<div key={l} className="bg-white/10 rounded-xl p-4">
               <p className="text-2xl font-bold text-white font-display">{v}</p>
               <p className="text-indigo-200 text-xs mt-0.5">{l}</p>
-            </div>
-          ))}
+            </div>))}
         </div>
       </div>
 
@@ -85,7 +83,7 @@ export default function Login({ navigate }: { navigate: Navigate }) {
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2 mb-8">
             <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white" />
+              <Zap className="w-4 h-4 text-white"/>
             </div>
             <span className="font-bold text-slate-900 font-display">CollabHub · SMVDU</span>
           </div>
@@ -93,35 +91,15 @@ export default function Login({ navigate }: { navigate: Navigate }) {
           <h2 className="text-2xl font-bold text-slate-900 font-display mb-1.5">Welcome back</h2>
           <p className="text-slate-500 text-sm mb-8">Sign in to your account to continue</p>
 
-          {error && (
-            <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          {error && (<div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
               {error}
-            </div>
-          )}
+            </div>)}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="SMVDU University Email"
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="yourname@smvdu.ac.in"
-              hint="Use your official SMVDU university email address."
-              icon={<Mail className="w-4 h-4" />}
-            />
-            <Input
-              label="Password"
-              type={showPass ? 'text' : 'password'}
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              icon={<Lock className="w-4 h-4" />}
-              iconRight={
-                <button type="button" onClick={() => setShowPass(v => !v)} className="text-slate-400 hover:text-slate-600 transition-colors">
-                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              }
-            />
+            <Input label="SMVDU University Email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="yourname@smvdu.ac.in" hint="Use your official SMVDU university email address." icon={<Mail className="w-4 h-4"/>}/>
+            <Input label="Password" type={showPass ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter your password" icon={<Lock className="w-4 h-4"/>} iconRight={<button type="button" onClick={() => setShowPass(v => !v)} className="text-slate-400 hover:text-slate-600 transition-colors">
+                  {showPass ? <EyeOff className="w-4 h-4"/> : <Eye className="w-4 h-4"/>}
+                </button>}/>
             <div className="flex justify-end">
               <button type="button" className="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
                 Forgot password?
@@ -134,7 +112,7 @@ export default function Login({ navigate }: { navigate: Navigate }) {
 
           <div className="mt-4 relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200" />
+              <div className="w-full border-t border-slate-200"/>
             </div>
             <div className="relative flex justify-center">
               <span className="px-3 bg-slate-50 text-xs text-slate-500">Or continue with</span>
@@ -160,6 +138,5 @@ export default function Login({ navigate }: { navigate: Navigate }) {
           </p>
         </div>
       </div>
-    </div>
-  );
+    </div>);
 }
