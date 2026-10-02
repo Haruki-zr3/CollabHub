@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { problems } from '../data/mockData';
 import { Avatar, Badge, Button, DifficultyBadge, Modal, ProblemStatusBadge, ProgressBar, SkillTag } from '../components/ui';
 import { ArrowLeft, Users, Calendar, Eye, Clock, Bookmark, Share2, MessageSquare, CheckCircle, HandHelping, Info } from 'lucide-react';
+import { apiRequest } from '../api';
 const availabilityOptions = ['Weekdays', 'Weekends', 'Evenings', 'Flexible'];
 export default function ProblemDetails({ navigate, context }) {
     const { user } = useAuth();
-    const problem = problems.find(p => p.id === context.problemId) || problems[0];
+    const [problem, setProblem] = useState(problems.find(p => p.id === context.problemId) || problems[0]);
+    const [error, setError] = useState('');
+    useEffect(() => {
+        apiRequest(`/problems/${context.problemId}`).then(setProblem).catch(err => setError(err.message));
+    }, [context.problemId]);
     const [showModal, setShowModal] = useState(false);
     const [offerSent, setOfferSent] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
@@ -22,9 +27,14 @@ export default function ProblemDetails({ navigate, context }) {
         setAvailability(aa => aa.includes(a) ? aa.filter(x => x !== a) : [...aa, a]);
     }
     function sendOffer() {
-        setOfferSent(true);
-        setShowModal(false);
-        setShowSuccess(true);
+        apiRequest(`/collaborations/problems/${problem.id}/join?user_id=${user.id}`, {
+            method: 'POST',
+            body: JSON.stringify({ message: helpMessage }),
+        }).then(() => {
+            setOfferSent(true);
+            setShowModal(false);
+            setShowSuccess(true);
+        }).catch(err => setError(err.message));
     }
     if (showSuccess) {
         return (<div className="p-6 max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center">
@@ -46,6 +56,7 @@ export default function ProblemDetails({ navigate, context }) {
       </div>);
     }
     return (<div className="p-6 max-w-5xl mx-auto">
+      {error && <p className="mb-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-700">{error}</p>}
       {/* Back */}
       <button onClick={() => navigate('discover')} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors mb-6 group">
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform"/>

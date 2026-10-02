@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { problems, students, collaborations, tasks } from '../data/mockData';
 import { Avatar, AvatarGroup, Badge, Button, Card, ProgressBar, ProblemStatusBadge, SkillTag, StatCard, SearchInput } from '../components/ui';
 import { Users, FileText, CheckCircle, Zap, Clock, ArrowRight, Bell, MessageSquare, Plus, Calendar } from 'lucide-react';
 import { useState } from 'react';
+import { apiRequest } from '../api';
 const upcomingTasks = tasks.filter(t => t.status !== 'completed').slice(0, 4);
 const recentActivity = collaborations[0].recentActivity;
 function getGreeting() {
@@ -17,8 +18,10 @@ function getGreeting() {
 export default function Dashboard({ navigate }) {
     const { user } = useAuth();
     const [search, setSearch] = useState('');
+    const [problemList, setProblemList] = useState(problems);
+    useEffect(() => { apiRequest('/problems').then(setProblemList).catch(() => {}); }, []);
     const firstName = user?.name.split(' ')[0] ?? 'there';
-    const recommendedProblems = problems.filter(p => p.status === 'open').slice(0, 3);
+    const recommendedProblems = problemList.filter(p => p.status === 'open').slice(0, 3);
     const recommendedStudents = students.filter(s => s.compatibility).slice(0, 3);
     const priorityDotColor = {
         low: '#94A3B8',

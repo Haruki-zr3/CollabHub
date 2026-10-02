@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { apiRequest, withUserId } from '../api';
 import { notifications as initialNotifs } from '../data/mockData';
 import { Avatar, Button } from '../components/ui';
 import { Bell, Users, CheckSquare, MessageSquare, FileText, Settings, Check } from 'lucide-react';
@@ -10,12 +12,17 @@ const typeConfig = {
     system: { icon: <Settings className="w-4 h-4"/>, color: 'bg-slate-100 text-slate-600' },
 };
 export default function Notifications({ navigate }) {
+    const { user } = useAuth();
     const [notifs, setNotifs] = useState(initialNotifs);
     const [filter, setFilter] = useState('all');
     const displayed = filter === 'unread' ? notifs.filter(n => !n.read) : notifs;
     const unreadCount = notifs.filter(n => !n.read).length;
+    useEffect(() => {
+        if (user) apiRequest(withUserId('/notifications', user.id)).then(setNotifs).catch(() => {});
+    }, [user]);
     function markRead(id) {
         setNotifs(ns => ns.map(n => n.id === id ? { ...n, read: true } : n));
+        apiRequest(`/notifications/${id}/read`, { method: 'PATCH' }).catch(() => {});
     }
     function markAllRead() {
         setNotifs(ns => ns.map(n => ({ ...n, read: true })));

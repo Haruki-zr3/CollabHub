@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Zap, Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { Button, Input } from '../components/ui';
+import { apiRequest } from '../api';
 function isSmvduEmail(email) {
     return email.trim().toLowerCase().endsWith('@smvdu.ac.in');
 }
@@ -24,29 +25,10 @@ export default function Login({ navigate }) {
         }
         setError('');
         setLoading(true);
-        setTimeout(() => {
-            const namePart = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-            setUser({
-                name: namePart,
-                email: email.trim().toLowerCase(),
-                branch: 'Computer Science & Engineering',
-                year: 3,
-                entryNumber: '',
-                bio: '',
-                skills: [],
-                interests: [],
-                availability: 'available',
-                cgpa: null,
-                github: '',
-                linkedin: '',
-                contributions: 0,
-                problemsSolved: 0,
-                collaborations: 0,
-                tasksCompleted: 0,
-            });
-            setLoading(false);
-            navigate('dashboard');
-        }, 1000);
+        apiRequest('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) })
+            .then(({ user }) => { setUser(user); navigate('dashboard'); })
+            .catch(err => setError(err.message))
+            .finally(() => setLoading(false));
     }
     return (<div className="min-h-screen bg-slate-50 flex">
       {/* Left panel */}

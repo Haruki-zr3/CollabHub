@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { tasks, collaborations } from '../data/mockData';
 import { Avatar, Badge, Button, PriorityBadge, ProgressBar, Tabs } from '../components/ui';
 import { CheckCircle, Clock, Calendar, Plus, Filter, ArrowRight } from 'lucide-react';
+import { apiRequest, withUserId } from '../api';
 const statusConfig = {
     todo: { label: 'To Do', color: 'bg-slate-100 text-slate-700 border-slate-200' },
     'in-progress': { label: 'In Progress', color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
@@ -45,9 +47,13 @@ function TaskRow({ task, navigate }) {
     </div>);
 }
 export default function Tasks({ navigate }) {
+    const { user } = useAuth();
     const [tab, setTab] = useState('all');
     const [sort, setSort] = useState('dueDate');
-    const allTasks = tasks;
+    const [allTasks, setAllTasks] = useState(tasks);
+    useEffect(() => {
+        if (user) apiRequest(withUserId('/tasks', user.id)).then(data => { if (data.length) setAllTasks(data); }).catch(() => {});
+    }, [user]);
     const grouped = {
         all: allTasks,
         todo: allTasks.filter(t => t.status === 'todo'),

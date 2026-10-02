@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { problems } from '../data/mockData';
 import { Avatar, Badge, Button, DifficultyBadge, ProblemStatusBadge, SearchInput, SkillTag } from '../components/ui';
 import { Filter, SlidersHorizontal, ArrowUpDown, Users, Clock, Eye, Calendar, BookOpen, Zap } from 'lucide-react';
+import { apiRequest } from '../api';
 const branches = ['All Branches', 'Computer Science', 'Electronics & Communication', 'Mechanical Engineering', 'Civil Engineering', 'Data Science', 'Biotechnology', 'Chemistry'];
 const types = ['All Types', 'academic', 'technical', 'project', 'research'];
 const statuses = ['All Status', 'open', 'in-progress', 'solved'];
@@ -92,6 +93,8 @@ function ProblemCard({ problem, navigate }) {
     </div>);
 }
 export default function DiscoverProblems({ navigate }) {
+    const [problemList, setProblemList] = useState(problems);
+    const [loadError, setLoadError] = useState('');
     const [search, setSearch] = useState('');
     const [branch, setBranch] = useState('All Branches');
     const [type, setType] = useState('All Types');
@@ -99,7 +102,10 @@ export default function DiscoverProblems({ navigate }) {
     const [difficulty, setDifficulty] = useState('All Levels');
     const [sort, setSort] = useState('recent');
     const [showFilters, setShowFilters] = useState(false);
-    const filtered = problems.filter(p => {
+    useEffect(() => {
+        apiRequest('/problems').then(setProblemList).catch(err => setLoadError(err.message));
+    }, []);
+    const filtered = problemList.filter(p => {
         if (search && !p.title.toLowerCase().includes(search.toLowerCase()) && !p.skills.some(s => s.toLowerCase().includes(search.toLowerCase())))
             return false;
         if (branch !== 'All Branches' && !p.branch.includes(branch.split(' ')[0]))
@@ -113,6 +119,7 @@ export default function DiscoverProblems({ navigate }) {
         return true;
     });
     return (<div className="p-6 max-w-[1400px] mx-auto">
+    {loadError && <p className="mb-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-700">{loadError} Showing demo data.</p>}
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

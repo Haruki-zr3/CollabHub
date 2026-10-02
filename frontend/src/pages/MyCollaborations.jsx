@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { collaborations } from '../data/mockData';
 import { Avatar, AvatarGroup, Badge, Button, Card, ProgressBar, Tabs } from '../components/ui';
 import { Calendar, CheckSquare, Users, ArrowRight, Plus, Zap, Clock } from 'lucide-react';
+import { apiRequest, withUserId } from '../api';
 const tabs = [
     { id: 'active', label: 'Active', count: collaborations.filter(c => c.status === 'active').length },
     { id: 'completed', label: 'Completed', count: 3 },
@@ -16,6 +17,15 @@ const completed = [
 export default function MyCollaborations({ navigate }) {
     const { user } = useAuth();
     const [tab, setTab] = useState('active');
+    const [collaborationList, setCollaborationList] = useState(collaborations);
+    useEffect(() => {
+        if (user) apiRequest(withUserId('/collaborations', user.id)).then(data => {
+            if (data.length) setCollaborationList(data.map(item => ({
+                ...item, title: item.problem.title, description: item.problem.description,
+                deadline: item.problem.deadline, lead: item.lead, members: item.members || [], tasks: [],
+            })));
+        }).catch(() => {});
+    }, [user]);
     return (<div className="p-6 max-w-[1200px] mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -50,7 +60,7 @@ export default function MyCollaborations({ navigate }) {
 
       {/* Active collaborations */}
       {tab === 'active' && (<div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {collaborations.map(collab => {
+          {collaborationList.map(collab => {
                 const todoCount = collab.tasks.filter(t => t.status === 'todo').length;
                 const inProgressCount = collab.tasks.filter(t => t.status === 'in-progress').length;
                 const completedCount = collab.tasks.filter(t => t.status === 'completed').length;

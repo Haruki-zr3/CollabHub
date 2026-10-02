@@ -46,15 +46,23 @@ const AuthContext = createContext({
     asStudent: () => null,
 });
 export function AuthProvider({ children }) {
-    const [user, setUserState] = useState(null);
+    const [user, setUserState] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem('collabhub_user') || 'null');
+        } catch {
+            return null;
+        }
+    });
     function setUser(u) {
         setUserState(u);
+        if (u) localStorage.setItem('collabhub_user', JSON.stringify(u));
     }
     function updateUser(partial) {
         setUserState(prev => (prev ? { ...prev, ...partial } : prev));
     }
     function clearUser() {
         setUserState(null);
+        localStorage.removeItem('collabhub_user');
     }
     function asStudent() {
         return user ? authUserToStudent(user) : null;

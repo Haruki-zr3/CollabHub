@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Button, Input, Textarea, Select } from '../components/ui';
 import { ArrowLeft, Plus, X, CheckCircle, Lightbulb } from 'lucide-react';
+import { apiRequest } from '../api';
+import { useAuth } from '../context/AuthContext';
 const allSkills = ['Python', 'JavaScript', 'React', 'Node.js', 'Machine Learning', 'TensorFlow', 'PyTorch', 'NLP', 'Computer Vision', 'Data Analysis', 'SQL', 'R', 'Arduino', 'IoT', 'MATLAB', 'ANSYS', 'SolidWorks', 'AutoCAD', 'C++', 'Java', 'Android', 'Flutter', 'AWS', 'Docker', 'Git', 'Signal Processing', 'UI/UX Design', 'Bioinformatics', 'HuggingFace', 'Embedded C'];
 const branches = ['Computer Science', 'Electronics & Communication', 'Mechanical Engineering', 'Civil Engineering', 'Chemical Engineering', 'Data Science', 'Biotechnology', 'Physics', 'Mathematics', 'Cross-disciplinary'];
 export default function PostProblem({ navigate }) {
+    const { user } = useAuth();
     const [form, setForm] = useState({
         title: '',
         description: '',
@@ -19,6 +22,7 @@ export default function PostProblem({ navigate }) {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [step, setStep] = useState(1);
+    const [error, setError] = useState('');
     function set(k, v) { setForm(f => ({ ...f, [k]: v })); }
     function toggleSkill(s) { setSelectedSkills(ss => ss.includes(s) ? ss.filter(x => x !== s) : [...ss, s]); }
     function addTag() { if (tagInput.trim() && !tags.includes(tagInput.trim())) {
@@ -28,7 +32,21 @@ export default function PostProblem({ navigate }) {
     function handleSubmit(e) {
         e.preventDefault();
         setLoading(true);
-        setTimeout(() => { setLoading(false); setSuccess(true); }, 1200);
+        setError('');
+        apiRequest(`/problems?user_id=${user.id}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                ...form,
+                type: form.type || 'project',
+                difficulty: form.difficulty || 'intermediate',
+                collaboratorsNeeded: Number(form.collaboratorsNeeded),
+                skills: selectedSkills,
+                tags,
+            }),
+        })
+            .then(() => setSuccess(true))
+            .catch(err => setError(err.message))
+            .finally(() => setLoading(false));
     }
     if (success) {
         return (<div className="p-6 max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center">

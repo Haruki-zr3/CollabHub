@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Zap, Eye, EyeOff, Lock, CheckCircle, GraduationCap, User } from 'lucide-react';
 import { Button, Input, Select } from '../components/ui';
+import { apiRequest } from '../api';
 const smvduBranches = [
     'Computer Science & Engineering',
     'Electronics & Communication Engineering',
@@ -20,6 +21,7 @@ export default function Register({ navigate }) {
     const { setUser } = useAuth();
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const [showPass, setShowPass] = useState(false);
     const [form, setForm] = useState({
         name: '',
@@ -47,28 +49,14 @@ export default function Register({ navigate }) {
             return;
         }
         setLoading(true);
-        setTimeout(() => {
-            setUser({
-                name: form.name.trim(),
-                email: form.email.trim().toLowerCase(),
-                branch: form.branch || 'Computer Science & Engineering',
-                year: form.year ? parseInt(form.year) : 1,
-                entryNumber: form.entryNumber.trim(),
-                bio: '',
-                skills: [],
-                interests: [],
-                availability: 'available',
-                cgpa: null,
-                github: '',
-                linkedin: '',
-                contributions: 0,
-                problemsSolved: 0,
-                collaborations: 0,
-                tasksCompleted: 0,
-            });
-            setLoading(false);
-            navigate('onboarding');
-        }, 1000);
+        setError('');
+        apiRequest('/auth/register', {
+            method: 'POST',
+            body: JSON.stringify({ ...form, year: form.year ? parseInt(form.year, 10) : 1 }),
+        })
+            .then(({ user }) => { setUser(user); navigate('onboarding'); })
+            .catch(err => setError(err.message))
+            .finally(() => setLoading(false));
     }
     return (<div className="min-h-screen bg-slate-50 flex">
       {/* Left panel */}
