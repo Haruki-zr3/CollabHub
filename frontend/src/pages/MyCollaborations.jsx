@@ -111,7 +111,7 @@ export default function MyCollaborations({ navigate }) {
                       <Calendar className="w-3.5 h-3.5"/>
                       {new Date(collab.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                     </span>
-                    <Button size="xs" onClick={event => { event.stopPropagation(); navigate('problem-details', { problemId: collab.problem.id }); }} iconRight={<ArrowRight className="w-3 h-3"/>}>
+                    <Button size="xs" onClick={event => { event.stopPropagation(); navigate('workspace', { collaborationId: collab.id }); }} iconRight={<ArrowRight className="w-3 h-3"/>}>
                       Open
                     </Button>
                   </div>

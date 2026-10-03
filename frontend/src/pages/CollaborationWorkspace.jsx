@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth, authUserToStudent } from '../context/AuthContext';
-import { collaborations } from '../data/mockData';
 import { Avatar, AvatarGroup, Badge, Button, Card, ProgressBar, PriorityBadge, UnderlineTabs } from '../components/ui';
 import { ArrowLeft, Plus, Calendar, CheckCircle, MessageSquare, FileText, Activity, Settings, MoreHorizontal, GripVertical } from 'lucide-react';
+import { apiRequest, withUserId } from '../api';
 const columns = [
     { id: 'todo', label: 'To Do', color: 'text-slate-600', bg: 'bg-slate-100' },
     { id: 'in-progress', label: 'In Progress', color: 'text-indigo-700', bg: 'bg-indigo-100' },
@@ -52,16 +52,50 @@ function KanbanCard({ task, onMove }) {
 export default function CollaborationWorkspace({ navigate, context }) {
     const { user } = useAuth();
     const authStudent = user ? authUserToStudent(user) : null;
-    const collab = collaborations.find(c => c.id === context.collaborationId) || collaborations[0];
+    const [collab, setCollab] = useState(null);
     const [tab, setTab] = useState('tasks');
-    const [tasks, setTasks] = useState(collab.tasks);
+    const [tasks, setTasks] = useState([]);
     const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState([
-        { id: '1', text: "I've pushed the preprocessing notebook to the shared drive. Can everyone review before Thursday?", from: collab.members[0], fromSelf: false, time: '10:22 AM' },
-        { id: '2', text: 'Looks good! I noticed some class imbalance in the dataset — should we address this before training?', from: collab.members[2] || collab.members[0], fromSelf: false, time: '10:45 AM' },
-        { id: '3', text: "Good catch. Let's use a weighted loss function. I'll update the training script by EOD.", from: null, fromSelf: true, time: '11:02 AM' },
-        { id: '4', text: 'Works for me. Also — the literature review draft is ready for review in the tasks board.', from: collab.members[1] || collab.members[0], fromSelf: false, time: '11:15 AM' },
-    ]);
+    const [messages, setMessages] = useState([]);
+    useEffect(() => {
+        if (!user || !context.collaborationId) return;
+        Promise.all([
+            apiRequest(withUserId('/collaborations', user.id)),
+            apiRequest(withUserId('/tasks', user.id)),
+        ]).then(([collaborations, allTasks]) => {
+            const selected = collaborations.find(item => String(item.id) === String(context.collaborationId));
+            if (!selected) return;
+            const lead = {
+                ...selected.lead,
+                initials: selected.lead.name.split(' ').map(name => name[0]).join('').slice(0, 2).toUpperCase(),
+                avatarColor: '#4F46E5',
+            };
+            const collaborationTasks = allTasks
+                .filter(task => String(task.collaborationId) === String(selected.id))
+                .map(task => ({
+                    ...task,
+                    assignee: task.assignee ? {
+                        ...task.assignee,
+                        initials: task.assignee.name.split(' ').map(name => name[0]).join('').slice(0, 2).toUpperCase(),
+                        avatarColor: '#0284C7',
+                    } : lead,
+                }));
+            setCollab({
+                ...selected,
+                title: selected.problem.title,
+                description: selected.problem.description,
+                deadline: selected.problem.deadline,
+                startDate: new Date().toISOString(),
+                lead,
+                members: [lead],
+                recentActivity: [],
+            });
+            setTasks(collaborationTasks);
+        }).catch(() => {
+            setCollab(null);
+            setTasks([]);
+        });
+    }, [context.collaborationId, user]);
     function moveTask(taskId, newStatus) {
         setTasks(ts => ts.map(t => t.id === taskId ? { ...t, status: newStatus } : t));
     }
@@ -70,6 +104,9 @@ export default function CollaborationWorkspace({ navigate, context }) {
             return;
         setMessages(ms => [...ms, { id: String(ms.length + 1), text: message, from: null, fromSelf: true, time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) }]);
         setMessage('');
+    }
+    if (!collab) {
+        return <div className="p-6 text-center text-sm text-slate-500">Loading collaboration workspace…</div>;
     }
     const workspaceTabs = [
         { id: 'overview', label: 'Overview', icon: <Activity className="w-4 h-4"/> },
