@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { problems, students, collaborations, tasks } from '../data/mockData';
+import { problems, students, collaborations } from '../data/mockData';
 import { Avatar, AvatarGroup, Badge, Button, Card, ProgressBar, ProblemStatusBadge, SkillTag, StatCard, SearchInput } from '../components/ui';
 import { Users, FileText, CheckCircle, Zap, Clock, ArrowRight, Bell, MessageSquare, Plus, Calendar } from 'lucide-react';
 import { apiRequest, withUserId } from '../api';
-const upcomingTasks = tasks.filter(t => t.status !== 'completed').slice(0, 4);
 const recentActivity = collaborations[0].recentActivity;
 function getGreeting() {
     const h = new Date().getHours();
@@ -20,19 +19,23 @@ export default function Dashboard({ navigate }) {
     const [problemList, setProblemList] = useState([]);
     const [myProblems, setMyProblems] = useState([]);
     const [activeCollaborations, setActiveCollaborations] = useState([]);
+    const [upcomingTasks, setUpcomingTasks] = useState([]);
     useEffect(() => {
         if (!user) return;
         Promise.all([
             apiRequest('/problems'),
             apiRequest(withUserId('/collaborations', user.id)),
-        ]).then(([allProblems, collaborationsForUser]) => {
+            apiRequest(withUserId('/tasks', user.id)),
+        ]).then(([allProblems, collaborationsForUser, tasksForUser]) => {
             setProblemList(allProblems);
             setMyProblems(allProblems.filter(problem => String(problem.postedBy?.id) === String(user.id)));
             setActiveCollaborations(collaborationsForUser.filter(collaboration => collaboration.status === 'active'));
+            setUpcomingTasks(tasksForUser.filter(task => task.status !== 'completed').slice(0, 4));
         }).catch(() => {
             setProblemList([]);
             setMyProblems([]);
             setActiveCollaborations([]);
+            setUpcomingTasks([]);
         });
     }, [user]);
     const firstName = user?.name.split(' ')[0] ?? 'there';
@@ -95,7 +98,7 @@ export default function Dashboard({ navigate }) {
               Discover Problems
             </Button>
           </div>) : (<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {activeCollaborations.map(collab => (<Card key={collab.id} hover padding onClick={() => navigate('workspace', { collaborationId: collab.id })} className="problem-card">
+            {activeCollaborations.map(collab => (<Card key={collab.id} hover padding onClick={() => navigate('problem-details', { problemId: collab.problem.id })} className="problem-card">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">
                     <h4 className="font-semibold text-slate-900 font-display leading-snug mb-1">{collab.problem.title}</h4>

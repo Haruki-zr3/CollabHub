@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { tasks, collaborations } from '../data/mockData';
 import { Avatar, Badge, Button, PriorityBadge, ProgressBar, Tabs } from '../components/ui';
 import { CheckCircle, Clock, Calendar, Plus, Filter, ArrowRight } from 'lucide-react';
 import { apiRequest, withUserId } from '../api';
@@ -50,9 +49,20 @@ export default function Tasks({ navigate }) {
     const { user } = useAuth();
     const [tab, setTab] = useState('all');
     const [sort, setSort] = useState('dueDate');
-    const [allTasks, setAllTasks] = useState(tasks);
+    const [allTasks, setAllTasks] = useState([]);
+    const [collaborationList, setCollaborationList] = useState([]);
     useEffect(() => {
-        if (user) apiRequest(withUserId('/tasks', user.id)).then(data => { if (data.length) setAllTasks(data); }).catch(() => {});
+        if (!user) return;
+        Promise.all([
+            apiRequest(withUserId('/tasks', user.id)),
+            apiRequest(withUserId('/collaborations', user.id)),
+        ]).then(([taskData, collabData]) => {
+            setAllTasks(taskData);
+            setCollaborationList(collabData);
+        }).catch(() => {
+            setAllTasks([]);
+            setCollaborationList([]);
+        });
     }, [user]);
     const grouped = {
         all: allTasks,
@@ -72,7 +82,7 @@ export default function Tasks({ navigate }) {
         { id: 'completed', label: 'Completed', count: completedCount },
     ];
     // Group by collaboration
-    const byCollab = collaborations.map(c => ({
+    const byCollab = collaborationList.map(c => ({
         collab: c,
         tasks: displayTasks.filter(t => t.collaborationId === c.id),
     })).filter(g => g.tasks.length > 0);

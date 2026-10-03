@@ -63,7 +63,7 @@ export default function MyCollaborations({ navigate }) {
                 const todoCount = collab.tasks.filter(t => t.status === 'todo').length;
                 const inProgressCount = collab.tasks.filter(t => t.status === 'in-progress').length;
                 const completedCount = collab.tasks.filter(t => t.status === 'completed').length;
-                return (<Card key={collab.id} className="hover:shadow-md hover:border-slate-300 transition-all">
+                return (<Card key={collab.id} onClick={() => navigate('problem-details', { problemId: collab.problem.id })} className="cursor-pointer hover:shadow-md hover:border-slate-300 transition-all">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1 min-w-0">
@@ -111,7 +111,7 @@ export default function MyCollaborations({ navigate }) {
                       <Calendar className="w-3.5 h-3.5"/>
                       {new Date(collab.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                     </span>
-                    <Button size="xs" onClick={() => navigate('workspace', { collaborationId: collab.id })} iconRight={<ArrowRight className="w-3 h-3"/>}>
+                    <Button size="xs" onClick={event => { event.stopPropagation(); navigate('problem-details', { problemId: collab.problem.id }); }} iconRight={<ArrowRight className="w-3 h-3"/>}>
                       Open
                     </Button>
                   </div>

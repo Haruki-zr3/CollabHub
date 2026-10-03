@@ -221,10 +221,10 @@ export function Modal({ open, onClose, title, children, width = 'md' }) {
     }, [open]);
     if (!open)
         return null;
-    return (<div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    return (<div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose}/>
-      <div className={`relative bg-white rounded-2xl shadow-2xl w-full ${modalWidths[width]} fade-in`}>
-        {title && (<div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+      <div className={`relative flex max-h-[calc(100vh-2rem)] w-full flex-col overflow-hidden bg-white rounded-2xl shadow-2xl ${modalWidths[width]} fade-in`}>
+        {title && (<div className="flex shrink-0 items-center justify-between px-6 py-4 border-b border-slate-200">
             <h3 className="font-semibold text-slate-900 font-display">{title}</h3>
             <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 transition-colors">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -232,7 +232,7 @@ export function Modal({ open, onClose, title, children, width = 'md' }) {
               </svg>
             </button>
           </div>)}
-        <div className="p-6">{children}</div>
+        <div className="min-h-0 overflow-y-auto p-6">{children}</div>
       </div>
     </div>);
 }
