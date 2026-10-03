@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import AppShell from './components/AppShell';
 import Landing from './pages/Landing';
@@ -19,15 +19,51 @@ import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import MyProblems from './pages/MyProblems';
 const publicPages = ['landing', 'login', 'register', 'onboarding'];
+const validPages = new Set([
+    ...publicPages,
+    'dashboard',
+    'discover',
+    'problem-details',
+    'post-problem',
+    'find-collaborators',
+    'profile',
+    'my-problems',
+    'my-collaborations',
+    'workspace',
+    'tasks',
+    'messages',
+    'notifications',
+    'settings',
+]);
+
+function pageFromLocation() {
+    const page = window.location.hash.replace(/^#\/?/, '');
+    return validPages.has(page) ? page : 'landing';
+}
+
 function AppInner() {
-    const [page, setPage] = useState('landing');
-    const [context, setContext] = useState({});
+    const initialPage = pageFromLocation();
+    const [page, setPage] = useState(initialPage);
+    const [context, setContext] = useState(() => window.history.state?.context || {});
+
+    useEffect(() => {
+        if (!window.location.hash) {
+            window.history.replaceState({ page: initialPage, context: {} }, '', '#landing');
+        }
+        const handlePopState = event => {
+            setPage(validPages.has(event.state?.page) ? event.state.page : pageFromLocation());
+            setContext(event.state?.context || {});
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        };
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+    }, [initialPage]);
+
     function navigate(to, ctx) {
+        const nextContext = ctx || {};
+        window.history.pushState({ page: to, context: nextContext }, '', `#${to}`);
         setPage(to);
-        if (ctx)
-            setContext(ctx);
-        else
-            setContext({});
+        setContext(nextContext);
         window.scrollTo({ top: 0, behavior: 'instant' });
     }
     const isPublic = publicPages.includes(page);

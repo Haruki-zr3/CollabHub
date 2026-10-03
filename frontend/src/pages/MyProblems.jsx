@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
-import { problems } from '../data/mockData';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Badge, Button, DifficultyBadge, ProblemStatusBadge, SkillTag, EmptyState } from '../components/ui';
 import { Plus, Eye, Users, Calendar, Edit, Trash2, FileText } from 'lucide-react';
+import { apiRequest } from '../api';
+import { useAuth } from '../context/AuthContext';
 export default function MyProblems({ navigate }) {
-    const myProblems = [];
+    const { user } = useAuth();
+    const [myProblems, setMyProblems] = useState([]);
     const [filter, setFilter] = useState('all');
+    useEffect(() => {
+        if (!user) return;
+        apiRequest('/problems')
+            .then(allProblems => setMyProblems(allProblems.filter(problem => String(problem.postedBy?.id) === String(user.id))))
+            .catch(() => setMyProblems([]));
+    }, [user]);
     const displayed = filter === 'all' ? myProblems : myProblems.filter(p => p.status === filter);
     return (<div className="p-6 max-w-[1200px] mx-auto">
       <div className="flex items-center justify-between mb-6">

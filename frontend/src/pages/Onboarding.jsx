@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Zap, ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import BrandLogo from '../components/BrandLogo';
+import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { Button } from '../components/ui';
 const allSkills = [
     'Python', 'JavaScript', 'React', 'Node.js', 'TypeScript',
@@ -53,9 +54,7 @@ export default function Onboarding({ navigate }) {
         {/* Header */}
         <div className="text-center mb-10">
           <div className="flex items-center justify-center gap-2 mb-6">
-            <div className="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white"/>
-            </div>
+            <BrandLogo className="w-[38px] h-[38px]" />
             <span className="font-bold text-slate-900 font-display text-lg">CollabHub</span>
           </div>
 

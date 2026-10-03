@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { problems, students, collaborations, tasks } from '../data/mockData';
 import { Avatar, AvatarGroup, Badge, Button, Card, ProgressBar, ProblemStatusBadge, SkillTag, StatCard, SearchInput } from '../components/ui';
 import { Users, FileText, CheckCircle, Zap, Clock, ArrowRight, Bell, MessageSquare, Plus, Calendar } from 'lucide-react';
-import { useState } from 'react';
-import { apiRequest } from '../api';
+import { apiRequest, withUserId } from '../api';
 const upcomingTasks = tasks.filter(t => t.status !== 'completed').slice(0, 4);
 const recentActivity = collaborations[0].recentActivity;
 function getGreeting() {
@@ -18,8 +17,24 @@ function getGreeting() {
 export default function Dashboard({ navigate }) {
     const { user } = useAuth();
     const [search, setSearch] = useState('');
-    const [problemList, setProblemList] = useState(problems);
-    useEffect(() => { apiRequest('/problems').then(setProblemList).catch(() => {}); }, []);
+    const [problemList, setProblemList] = useState([]);
+    const [myProblems, setMyProblems] = useState([]);
+    const [activeCollaborations, setActiveCollaborations] = useState([]);
+    useEffect(() => {
+        if (!user) return;
+        Promise.all([
+            apiRequest('/problems'),
+            apiRequest(withUserId('/collaborations', user.id)),
+        ]).then(([allProblems, collaborationsForUser]) => {
+            setProblemList(allProblems);
+            setMyProblems(allProblems.filter(problem => String(problem.postedBy?.id) === String(user.id)));
+            setActiveCollaborations(collaborationsForUser.filter(collaboration => collaboration.status === 'active'));
+        }).catch(() => {
+            setProblemList([]);
+            setMyProblems([]);
+            setActiveCollaborations([]);
+        });
+    }, [user]);
     const firstName = user?.name.split(' ')[0] ?? 'there';
     const recommendedProblems = problemList.filter(p => p.status === 'open').slice(0, 3);
     const recommendedStudents = students.filter(s => s.compatibility).slice(0, 3);
@@ -56,8 +71,8 @@ export default function Dashboard({ navigate }) {
 
       {/* Stats — real user data, start at 0 for new students */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Active Collaborations" value={user?.collaborations ?? 0} icon={<Users className="w-4 h-4"/>} iconColor="bg-indigo-500"/>
-        <StatCard label="Problems Posted" value={0} icon={<FileText className="w-4 h-4"/>} iconColor="bg-violet-500"/>
+        <StatCard label="Active Collaborations" value={activeCollaborations.length} icon={<Users className="w-4 h-4"/>} iconColor="bg-indigo-500"/>
+        <StatCard label="Problems Posted" value={myProblems.length} icon={<FileText className="w-4 h-4"/>} iconColor="bg-violet-500"/>
         <StatCard label="Problems Solved" value={user?.problemsSolved ?? 0} icon={<CheckCircle className="w-4 h-4"/>} iconColor="bg-emerald-500"/>
         <StatCard label="Total Contributions" value={user?.contributions ?? 0} icon={<Zap className="w-4 h-4"/>} iconColor="bg-amber-500"/>
       </div>
@@ -70,7 +85,7 @@ export default function Dashboard({ navigate }) {
             View all <ArrowRight className="w-3.5 h-3.5"/>
           </button>
         </div>
-        {(user?.collaborations ?? 0) === 0 ? (<div className="bg-white rounded-xl border border-slate-200 border-dashed p-10 flex flex-col items-center text-center">
+        {activeCollaborations.length === 0 ? (<div className="bg-white rounded-xl border border-slate-200 border-dashed p-10 flex flex-col items-center text-center">
             <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center mb-3">
               <Users className="w-6 h-6 text-indigo-400"/>
             </div>
@@ -80,11 +95,11 @@ export default function Dashboard({ navigate }) {
               Discover Problems
             </Button>
           </div>) : (<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {collaborations.map(collab => (<Card key={collab.id} hover padding onClick={() => navigate('workspace', { collaborationId: collab.id })} className="problem-card">
+            {activeCollaborations.map(collab => (<Card key={collab.id} hover padding onClick={() => navigate('workspace', { collaborationId: collab.id })} className="problem-card">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold text-slate-900 font-display leading-snug mb-1">{collab.title}</h4>
-                    <p className="text-xs text-slate-500 line-clamp-1">{collab.description}</p>
+                    <h4 className="font-semibold text-slate-900 font-display leading-snug mb-1">{collab.problem.title}</h4>
+                    <p className="text-xs text-slate-500 line-clamp-1">{collab.problem.description}</p>
                   </div>
                   <Badge variant={collab.status === 'active' ? 'green' : 'slate'} dot className="ml-3 shrink-0">
                     {collab.status === 'active' ? 'Active' : 'Paused'}
@@ -98,10 +113,10 @@ export default function Dashboard({ navigate }) {
                   <ProgressBar value={collab.progress} size="md"/>
                 </div>
                 <div className="flex items-center justify-between">
-                  <AvatarGroup students={collab.members} max={3} size="sm"/>
+                  <AvatarGroup students={collab.members || []} max={3} size="sm"/>
                   <div className="flex items-center gap-1 text-xs text-slate-500">
                     <Calendar className="w-3.5 h-3.5"/>
-                    {new Date(collab.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                    {new Date(collab.problem.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                   </div>
                 </div>
               </Card>))}

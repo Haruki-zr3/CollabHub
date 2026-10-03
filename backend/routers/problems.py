@@ -42,6 +42,9 @@ def get_problem(problem_id: int):
 @router.post("")
 def create_problem(payload: ProblemCreate, user_id: int):
     with db_cursor() as cursor:
+        cursor.execute("SELECT 1 FROM users WHERE id=%s", (user_id,))
+        if not cursor.fetchone():
+            raise HTTPException(404, "User not found.")
         cursor.execute(
             """INSERT INTO problems
             (title,description,long_description,branch,problem_type,difficulty,deadline,

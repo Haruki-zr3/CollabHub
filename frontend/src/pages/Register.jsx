@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Zap, Eye, EyeOff, Lock, CheckCircle, GraduationCap, User } from 'lucide-react';
+import BrandLogo from '../components/BrandLogo';
+import { Eye, EyeOff, Lock, CheckCircle, GraduationCap, User } from 'lucide-react';
 import { Button, Input, Select } from '../components/ui';
 import { apiRequest } from '../api';
 const smvduBranches = [
@@ -62,9 +63,7 @@ export default function Register({ navigate }) {
       {/* Left panel */}
       <div className="hidden lg:flex lg:w-5/12 bg-slate-900 flex-col p-12 justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white"/>
-          </div>
+          <BrandLogo />
           <span className="font-bold text-white font-display text-base">CollabHub · SMVDU</span>
         </div>
 
@@ -107,9 +106,7 @@ export default function Register({ navigate }) {
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm">
           <div className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white"/>
-            </div>
+            <BrandLogo />
             <span className="font-bold text-slate-900 font-display">CollabHub · SMVDU</span>
           </div>
 
@@ -133,6 +130,8 @@ export default function Register({ navigate }) {
             ? 'Step 1 of 2 — Account information'
             : 'Step 2 of 2 — Tell us about your studies at SMVDU.'}
           </p>
+
+          {error && <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">{error}</div>}
 
           <form onSubmit={handleNext} className="space-y-4">
             {step === 1 ? (<>

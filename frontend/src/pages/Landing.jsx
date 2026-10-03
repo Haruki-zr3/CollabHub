@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { Zap, ArrowRight, Users, CheckCircle, Star, BookOpen, Lightbulb, Globe, MessageSquare, ChevronRight } from 'lucide-react';
+import React from 'react';
+import { useAuth } from '../context/AuthContext';
+import BrandLogo from '../components/BrandLogo';
+import { ArrowRight, Users, CheckCircle, Star, Lightbulb, Globe, MessageSquare, ChevronRight } from 'lucide-react';
 import { Button, Badge } from '../components/ui';
 const features = [
     { icon: <Lightbulb className="w-5 h-5"/>, color: 'bg-amber-50 text-amber-600', title: 'Post Academic Problems', desc: 'Share research questions, technical challenges, and project needs that you cannot solve alone.' },
@@ -25,25 +27,25 @@ const sampleProblems = [
     { title: 'NLP for Code-Switching Detection', branch: 'CS × Linguistics', skills: ['PyTorch', 'NLP', 'HuggingFace'], status: 'in-progress', collab: '2/3' },
 ];
 export default function Landing({ navigate }) {
-    const [menuOpen, setMenuOpen] = useState(false);
+    const { user } = useAuth();
     return (<div className="min-h-screen bg-white">
       {/* Nav */}
       <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center gap-8">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white"/>
-            </div>
+            <button type="button" aria-label="Go to homepage" onClick={() => navigate(user ? 'dashboard' : 'landing')} className="rounded-xl">
+              <BrandLogo />
+            </button>
             <span className="font-bold text-slate-900 font-display text-base">CollabHub</span>
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm text-slate-600 font-medium">
-            <a href="#features" className="hover:text-slate-900 transition-colors">Features</a>
             <a href="#how-it-works" className="hover:text-slate-900 transition-colors">How it works</a>
+            <a href="#features" className="hover:text-slate-900 transition-colors">Features</a>
             <a href="#problems" className="hover:text-slate-900 transition-colors">Explore</a>
           </div>
           <div className="ml-auto flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={() => navigate('login')}>Log in</Button>
-            <Button variant="primary" size="sm" onClick={() => navigate('register')}>Get started free</Button>
+            <Button variant="primary" size="sm" onClick={() => navigate('register')}>Get started</Button>
           </div>
         </div>
       </nav>
@@ -61,10 +63,7 @@ export default function Landing({ navigate }) {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" onClick={() => navigate('register')} iconRight={<ArrowRight />}>
-              Start collaborating free
-            </Button>
-            <Button size="lg" variant="outline" onClick={() => navigate('discover')}>
-              Browse problems
+              Start collaborating
             </Button>
           </div>
 
@@ -136,8 +135,8 @@ export default function Landing({ navigate }) {
               <p className="text-sm font-semibold text-indigo-600 mb-3 uppercase tracking-wider">Live on the platform</p>
               <h2 className="text-4xl font-bold text-slate-900 font-display">Problems seeking collaborators</h2>
             </div>
-            <Button variant="outline" size="sm" onClick={() => navigate('discover')} iconRight={<ArrowRight />}>
-              Browse all
+            <Button variant="outline" size="sm" onClick={() => navigate(user ? 'dashboard' : 'login')} iconRight={<ArrowRight />}>
+              Browse All
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -193,10 +192,7 @@ export default function Landing({ navigate }) {
           <p className="text-indigo-200 mb-10 text-lg">Join 340+ SMVDU students already solving problems together across every department.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" variant="secondary" onClick={() => navigate('register')}>
-              Create free account
-            </Button>
-            <Button size="lg" onClick={() => navigate('discover')} className="!bg-white/10 !text-white hover:!bg-white/20 border border-white/20">
-              Browse problems
+              Create an account
             </Button>
           </div>
         </div>
@@ -207,12 +203,10 @@ export default function Landing({ navigate }) {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
-                <Zap className="w-3.5 h-3.5 text-white"/>
-              </div>
+              <BrandLogo className="w-[30px] h-[30px] rounded-lg" />
               <span className="font-bold text-white font-display text-sm">CollabHub · SMVDU</span>
             </div>
-            <p className="text-sm">© 2025 Student CollabHub · SMVDU. Students helping students.</p>
+            <p className="text-sm">© 2026 Student CollabHub · SMVDU. Students helping students.</p>
           </div>
         </div>
       </footer>

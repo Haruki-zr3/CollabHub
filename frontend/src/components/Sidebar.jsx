@@ -1,7 +1,8 @@
 import React from 'react';
 import { useAuth, authUserToStudent } from '../context/AuthContext';
 import { Avatar, StatusDot } from './ui';
-import { LayoutDashboard, Search, FileText, Users, CheckSquare, MessageSquare, Bell, User, Settings, Zap, ChevronRight, Plus, LogOut, } from 'lucide-react';
+import BrandLogo from './BrandLogo';
+import { LayoutDashboard, Search, FileText, Users, CheckSquare, MessageSquare, Bell, User, Settings, ChevronRight, Plus, LogOut, } from 'lucide-react';
 const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard />, group: 'main' },
     { id: 'discover', label: 'Discover Problems', icon: <Search />, group: 'main' },
@@ -24,9 +25,14 @@ export default function Sidebar({ currentPage, navigate }) {
     return (<aside className="fixed top-0 left-0 bottom-0 w-60 bg-slate-50 border-r border-slate-200 flex flex-col z-40">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-4 h-16 border-b border-slate-200 shrink-0">
-        <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center">
-          <Zap className="w-4 h-4 text-white"/>
-        </div>
+        <button
+          type="button"
+          aria-label="Go to dashboard"
+          onClick={() => navigate(user ? 'dashboard' : 'landing')}
+          className="rounded-xl"
+        >
+          <BrandLogo />
+        </button>
         <span className="font-bold text-slate-900 font-display tracking-tight text-base">CollabHub <span className="text-indigo-500 font-medium text-xs">SMVDU</span></span>
       </div>
 

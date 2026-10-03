@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { collaborations } from '../data/mockData';
 import { Avatar, AvatarGroup, Badge, Button, Card, ProgressBar, Tabs } from '../components/ui';
 import { Calendar, CheckSquare, Users, ArrowRight, Plus, Zap, Clock } from 'lucide-react';
 import { apiRequest, withUserId } from '../api';
-const tabs = [
-    { id: 'active', label: 'Active', count: collaborations.filter(c => c.status === 'active').length },
-    { id: 'completed', label: 'Completed', count: 3 },
-    { id: 'paused', label: 'Paused', count: 0 },
-];
 const completed = [
     { id: 'cc1', title: 'Campus Lost & Found Web App', description: 'A full-stack web app for reporting and finding lost items on campus.', branch: 'CS', members: 3, completedDate: 'Oct 2024', contributions: 12, role: 'Lead Developer' },
     { id: 'cc2', title: 'NLP Sentiment Analysis on Student Reviews', description: 'Analyzed 5,000+ student course reviews using BERT for sentiment classification.', branch: 'CS × Data Science', members: 2, completedDate: 'Aug 2024', contributions: 9, role: 'ML Engineer' },
@@ -17,10 +11,15 @@ const completed = [
 export default function MyCollaborations({ navigate }) {
     const { user } = useAuth();
     const [tab, setTab] = useState('active');
-    const [collaborationList, setCollaborationList] = useState(collaborations);
+    const [collaborationList, setCollaborationList] = useState([]);
+    const tabs = [
+        { id: 'active', label: 'Active', count: collaborationList.filter(c => c.status === 'active').length },
+        { id: 'completed', label: 'Completed', count: 3 },
+        { id: 'paused', label: 'Paused', count: collaborationList.filter(c => c.status === 'paused').length },
+    ];
     useEffect(() => {
         if (user) apiRequest(withUserId('/collaborations', user.id)).then(data => {
-            if (data.length) setCollaborationList(data.map(item => ({
+            setCollaborationList(data.map(item => ({
                 ...item, title: item.problem.title, description: item.problem.description,
                 deadline: item.problem.deadline, lead: item.lead, members: item.members || [], tasks: [],
             })));
@@ -30,7 +29,7 @@ export default function MyCollaborations({ navigate }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-slate-500">{collaborations.length} active, 3 completed</p>
+          <p className="text-sm text-slate-500">{collaborationList.filter(item => item.status === 'active').length} active, 3 completed</p>
         </div>
         <Button size="sm" icon={<Plus className="w-4 h-4"/>} onClick={() => navigate('discover')}>
           Find a Problem
@@ -40,7 +39,7 @@ export default function MyCollaborations({ navigate }) {
       {/* Overview stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-            { label: 'Active Collaborations', value: 2, icon: <Users className="w-4 h-4"/>, color: 'bg-indigo-500' },
+            { label: 'Active Collaborations', value: collaborationList.filter(item => item.status === 'active').length, icon: <Users className="w-4 h-4"/>, color: 'bg-indigo-500' },
             { label: 'Tasks Completed', value: 36, icon: <CheckSquare className="w-4 h-4"/>, color: 'bg-emerald-500' },
             { label: 'Total Contributions', value: user?.contributions ?? 0, icon: <Zap className="w-4 h-4"/>, color: 'bg-amber-500' },
             { label: 'Hours Contributed', value: '128h', icon: <Clock className="w-4 h-4"/>, color: 'bg-violet-500' },

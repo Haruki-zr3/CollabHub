@@ -66,6 +66,7 @@ export default function PostProblem({ navigate }) {
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform"/>
         Back
       </button>
+      {error && <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
 
       {/* Step indicator */}
       <div className="flex items-center gap-2 mb-8">
