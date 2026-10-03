@@ -1,25 +1,34 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
-from database.connection import connection
-from routes.users import router as users_router
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from database import init_db
+from routers import auth, collaborations, notifications, problems, tasks, users
 
-app.include_router(users_router, prefix="/users")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    yield
+
+
+app = FastAPI(title="CollabHub API", lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+app.include_router(auth.router, prefix="/api")
+app.include_router(users.router, prefix="/api")
+app.include_router(problems.router, prefix="/api")
+app.include_router(collaborations.router, prefix="/api")
+app.include_router(tasks.router, prefix="/api")
+app.include_router(notifications.router, prefix="/api")
 
 
 @app.get("/")
 def home():
     return {"message": "CollabHub API is running"}
-
-
-@app.get("/db-test")
-def database_test():
-    cursor = connection.cursor()
-    cursor.execute("SELECT 1")
-    result = cursor.fetchone()
-    cursor.close()
-
-    return {
-        "message": "Database connection successful",
-        "result": result[0]
-    }
