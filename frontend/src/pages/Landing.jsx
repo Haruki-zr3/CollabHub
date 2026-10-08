@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import BrandLogo from '../components/BrandLogo';
-import { ArrowRight, Users, CheckCircle, Star, Lightbulb, Globe, MessageSquare, ChevronRight } from 'lucide-react';
+import { ArrowRight, Users, CheckCircle, Star, Lightbulb, Globe, MessageSquare } from 'lucide-react';
 import { Button, Badge } from '../components/ui';
 const features = [
     { icon: <Lightbulb className="w-5 h-5"/>, color: 'bg-amber-50 text-amber-600', title: 'Post Academic Problems', desc: 'Share research questions, technical challenges, and project needs that you cannot solve alone.' },
@@ -28,24 +28,30 @@ const sampleProblems = [
 ];
 export default function Landing({ navigate }) {
     const { user } = useAuth();
+    const [activeStep, setActiveStep] = useState(null);
+    const chartSteps = [
+        { ...steps[0], path: 'M250 250 L85.45 155 A190 190 0 0 1 414.55 155 Z', position: { x: 145, y: 105, width: 210, height: 100 }, move: 'translate(0 -14)' },
+        { ...steps[1], path: 'M250 250 L414.55 155 A190 190 0 0 1 250 440 Z', position: { x: 290, y: 260, width: 128, height: 100 }, move: 'translate(8 6)' },
+        { ...steps[2], path: 'M250 250 L250 440 A190 190 0 0 1 85.45 155 Z', position: { x: 82, y: 260, width: 128, height: 100 }, move: 'translate(-8 6)' },
+    ];
     return (<div className="min-h-screen bg-white">
       {/* Nav */}
       <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center gap-8">
-          <div className="flex items-center gap-2">
+        <div className="w-full px-3 sm:px-5 h-20 grid grid-cols-[1fr_auto_1fr] items-center">
+          <div className="flex items-center gap-2 justify-self-start">
             <button type="button" aria-label="Go to homepage" onClick={() => navigate(user ? 'dashboard' : 'landing')} className="rounded-xl">
-              <BrandLogo />
+              <BrandLogo className="w-14 h-14" />
             </button>
-            <span className="font-bold text-slate-900 font-display text-base">CollabHub</span>
+            <span className="font-extrabold text-slate-900 font-display text-xl">CollabHub</span>
           </div>
-          <div className="hidden md:flex items-center gap-6 text-sm text-slate-600 font-medium">
+          <div className="hidden md:flex items-center justify-center gap-8 text-base text-slate-700 font-bold">
             <a href="#how-it-works" className="hover:text-slate-900 transition-colors">How it works</a>
             <a href="#features" className="hover:text-slate-900 transition-colors">Features</a>
             <a href="#problems" className="hover:text-slate-900 transition-colors">Explore</a>
           </div>
-          <div className="ml-auto flex items-center gap-3">
-            <Button variant="ghost" size="sm" onClick={() => navigate('login')}>Log in</Button>
-            <Button variant="primary" size="sm" onClick={() => navigate('register')}>Get started</Button>
+          <div className="justify-self-end flex items-center gap-3">
+            <Button variant="ghost" size="lg" onClick={() => navigate('login')}>Log in</Button>
+            <Button variant="primary" size="lg" onClick={() => navigate('register')}>Get started</Button>
           </div>
         </div>
       </nav>
@@ -53,7 +59,7 @@ export default function Landing({ navigate }) {
       {/* Hero */}
       <section className="gradient-hero border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-6 py-24 text-center">
-          <Badge variant="indigo" className="mb-6">The official collaboration platform of SMVDU</Badge>
+          <Badge variant="indigo" className="mx-auto mb-6 flex w-fit justify-center px-4 py-2 text-xl font-extrabold">The collaboration platform of SMVDU</Badge>
           <h1 className="text-5xl md:text-6xl font-bold text-slate-900 font-display leading-tight tracking-tight mb-6 max-w-4xl mx-auto">
             Students helping students<br />
             <span className="text-indigo-600">solve problems</span> at SMVDU
@@ -85,25 +91,50 @@ export default function Landing({ navigate }) {
       {/* How it works */}
       <section id="how-it-works" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10">
             <p className="text-sm font-semibold text-indigo-600 mb-3 uppercase tracking-wider">Simple process</p>
             <h2 className="text-4xl font-bold text-slate-900 font-display">Collaborate in three steps</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {steps.map((step, i) => (<div key={i} className="relative">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg font-display shrink-0">
-                    {step.n}
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900 font-display mb-2">{step.title}</h3>
-                    <p className="text-slate-600 text-sm leading-relaxed">{step.desc}</p>
-                  </div>
+          <div className="mx-auto w-full max-w-[560px]">
+            <div className="relative">
+              <svg viewBox="0 0 500 500" className="h-auto w-full overflow-visible" role="img" aria-label="Three steps to collaborate">
+              {chartSteps.map((step, i) => {
+                  const isActive = activeStep === i;
+                  return (<g
+                    key={step.n}
+                    role="button"
+                    tabIndex="0"
+                    aria-label={`${step.n}: ${step.title}`}
+                    className="cursor-pointer outline-none"
+                    style={{ transform: isActive ? step.move : 'translate(0 0)', transformOrigin: '250px 250px', transition: 'transform 220ms ease' }}
+                    onMouseEnter={() => setActiveStep(i)}
+                    onMouseLeave={() => setActiveStep(null)}
+                    onFocus={() => setActiveStep(i)}
+                    onBlur={() => setActiveStep(null)}
+                  >
+                    <path d={step.path} fill={['#E0E7FF', '#C7D2FE', '#A5B4FC'][i]} stroke="#FFFFFF" strokeWidth="5" />
+                    <foreignObject {...step.position} className="pointer-events-none">
+                      <div className={`flex h-full flex-col items-center justify-center overflow-hidden px-3 text-center transition-opacity duration-200 ${isActive ? 'opacity-0' : ''}`}>
+                        <span className="mb-1 text-xs font-semibold tracking-widest text-indigo-700">{step.n}</span>
+                        <h3 className="font-display text-sm font-semibold leading-tight text-slate-900">{step.title}</h3>
+                      </div>
+                    </foreignObject>
+                  </g>);
+              })}
+              <circle cx="250" cy="250" r="64" fill="#FFFFFF" stroke="#E0E7FF" strokeWidth="5" />
+              <text x="250" y="242" textAnchor="middle" className="fill-slate-900 font-display text-[15px] font-extrabold">Collaborate</text>
+              <text x="250" y="264" textAnchor="middle" className="fill-slate-900 font-display text-[15px] font-extrabold">in three steps</text>
+              </svg>
+              {activeStep !== null && (
+                <div className={`pointer-events-none absolute z-10 w-56 rounded-2xl border border-indigo-100 bg-white p-4 text-left shadow-lg ring-1 ring-indigo-50 ${
+                  activeStep === 0 ? 'right-0 top-2' : activeStep === 1 ? 'right-0 bottom-8' : 'left-0 bottom-8'
+                }`}>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600">Step {steps[activeStep].n}</p>
+                  <h3 className="mt-1 font-display text-base font-semibold text-slate-900">{steps[activeStep].title}</h3>
+                  <p className="mt-2 text-sm font-normal leading-relaxed text-slate-600">{steps[activeStep].desc}</p>
                 </div>
-                {i < 2 && (<div className="hidden md:block absolute top-6 left-full w-8 flex items-center justify-center">
-                    <ChevronRight className="w-5 h-5 text-slate-300 -ml-3"/>
-                  </div>)}
-              </div>))}
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -116,12 +147,12 @@ export default function Landing({ navigate }) {
             <h2 className="text-4xl font-bold text-slate-900 font-display">Everything you need to collaborate</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f, i) => (<div key={i} className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-md hover:border-slate-300 transition-all">
-                <div className={`w-10 h-10 rounded-xl ${f.color} flex items-center justify-center mb-4`}>
+            {features.map((f, i) => (<div key={i} className="feature-card-reveal group bg-white rounded-2xl border border-slate-200 p-8 hover:-translate-y-1 hover:shadow-lg hover:border-indigo-200 transition-all duration-300" style={{ '--feature-delay': `${i * 140}ms` }}>
+                <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${f.color} mb-5 transition-transform duration-300 group-hover:scale-110 [&>svg]:h-7 [&>svg]:w-7`}>
                   {f.icon}
                 </div>
-                <h3 className="font-semibold text-slate-900 font-display mb-2">{f.title}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
+                <h3 className="text-lg font-bold text-slate-900 font-display mb-3">{f.title}</h3>
+                <p className="text-base text-slate-600 leading-relaxed">{f.desc}</p>
               </div>))}
           </div>
         </div>

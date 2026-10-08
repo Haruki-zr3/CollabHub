@@ -70,6 +70,30 @@ h1, h2, h3, h4, h5, h6 {
   animation: fadeIn 0.2s ease;
 }
 
+.feature-card-reveal {
+  opacity: 0;
+  animation: featureCardReveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--feature-delay, 0ms);
+}
+
+@keyframes featureCardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-card-reveal {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
