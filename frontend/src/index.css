@@ -5,6 +5,11 @@
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-display: 'Manrope', system-ui, sans-serif;
   --sidebar-width: 240px;
+  --smvdu-navy: #002147;
+  --smvdu-blue: #0b5d8f;
+  --smvdu-gold: #d9a441;
+  --glass-bg: rgba(255, 255, 255, 0.58);
+  --glass-border: rgba(255, 255, 255, 0.72);
 }
 
 * {
@@ -18,9 +23,57 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background: #F8FAFC;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(217, 164, 65, 0.18), transparent 28rem),
+    radial-gradient(circle at 88% 18%, rgba(11, 93, 143, 0.18), transparent 32rem),
+    linear-gradient(135deg, #eef5f9 0%, #f8fbfc 48%, #e7f0f5 100%);
   color: #0F172A;
   margin: 0;
+  min-height: 100vh;
+}
+
+.glass-app {
+  background: transparent;
+}
+
+.glass-panel,
+.glass-header,
+.glass-sidebar {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  backdrop-filter: blur(18px) saturate(135%);
+}
+
+.glass-panel {
+  box-shadow: 0 12px 32px rgba(0, 33, 71, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.glass-header {
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 8px 24px rgba(0, 33, 71, 0.06);
+}
+
+.glass-sidebar {
+  border-right: 1px solid var(--glass-border);
+  box-shadow: 8px 0 28px rgba(0, 33, 71, 0.06);
+}
+
+.glass-sidebar .bg-indigo-600 {
+  background-color: var(--smvdu-navy);
+}
+
+.glass-sidebar .hover\:bg-slate-200:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+input,
+textarea,
+select {
+  background-color: rgba(255, 255, 255, 0.62);
+  border-color: rgba(0, 33, 71, 0.18);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 h1, h2, h3, h4, h5, h6 {

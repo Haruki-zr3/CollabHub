@@ -24,12 +24,12 @@ export default function AppShell({ currentPage, sidebarPage, navigate, children 
     const unread = notifications.filter(n => !n.read).length;
     const title = pageTitles[currentPage] || '';
     const avatarStudent = user ? authUserToStudent(user) : null;
-    return (<div className="min-h-screen bg-slate-50 flex">
+    return (<div className="glass-app min-h-screen flex">
       <Sidebar currentPage={sidebarPage || currentPage} navigate={navigate}/>
 
       <div className="flex-1 ml-60 flex flex-col min-h-screen">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 h-16 bg-white border-b border-slate-200 flex items-center gap-4 px-6 shrink-0">
+        <header className="glass-header sticky top-0 z-30 h-16 flex items-center gap-4 px-6 shrink-0">
           <h1 className="font-bold text-slate-900 font-display text-lg leading-none">{title}</h1>
           <div className="flex-1"/>
           <button onClick={() => navigate('notifications')} className="relative w-9 h-9 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-600 transition-colors">

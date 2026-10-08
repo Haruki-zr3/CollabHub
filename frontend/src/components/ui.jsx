@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 const buttonStyles = {
-    primary: 'bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 shadow-sm',
-    secondary: 'bg-slate-100 text-slate-700 hover:bg-slate-200 active:bg-slate-300',
-    outline: 'border border-slate-300 text-slate-700 hover:bg-slate-50 active:bg-slate-100 bg-white',
-    ghost: 'text-slate-600 hover:bg-slate-100 active:bg-slate-200',
+    primary: 'bg-[#002147] text-white hover:bg-[#003866] active:bg-[#00152e] shadow-sm',
+    secondary: 'bg-[#fff7df] text-[#7a5200] hover:bg-[#ffefb8] active:bg-[#ffe79a]',
+    outline: 'border border-[#b9c9d8] text-[#002147] hover:bg-white/70 active:bg-white/90 bg-white/40',
+    ghost: 'text-[#24415d] hover:bg-white/60 active:bg-white/80',
     danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm',
 };
 const sizeStyles = {
@@ -108,7 +108,7 @@ export function Select({ label, error, className = '', id, children, ...props })
     </div>);
 }
 export function Card({ children, className = '', onClick, hover, padding = true }) {
-    return (<div onClick={onClick} className={`bg-white rounded-xl border border-slate-200 shadow-sm transition-shadow ${hover ? 'cursor-pointer hover:shadow-md hover:border-slate-300' : ''} ${padding ? 'p-5' : ''} ${className}`}>
+    return (<div onClick={onClick} className={`glass-panel rounded-2xl border shadow-sm transition-all ${hover ? 'cursor-pointer hover:shadow-lg hover:-translate-y-0.5' : ''} ${padding ? 'p-5' : ''} ${className}`}>
       {children}
     </div>);
 }

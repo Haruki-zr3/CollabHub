@@ -22,7 +22,7 @@ export default function Sidebar({ currentPage, navigate }) {
         { key: 'work', label: 'Workspace' },
         { key: 'account', label: 'Account' },
     ];
-    return (<aside className="fixed top-0 left-0 bottom-0 w-60 bg-slate-50 border-r border-slate-200 flex flex-col z-40">
+    return (<aside className="glass-sidebar fixed top-0 left-0 bottom-0 w-60 flex flex-col z-40">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-4 h-16 border-b border-slate-200 shrink-0">
         <button
