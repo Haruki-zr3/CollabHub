@@ -112,7 +112,7 @@ export default function Landing({ navigate }) {
                     onFocus={() => setActiveStep(i)}
                     onBlur={() => setActiveStep(null)}
                   >
-                    <path d={step.path} fill={['#E0E7FF', '#C7D2FE', '#A5B4FC'][i]} stroke="#FFFFFF" strokeWidth="5" />
+                    <path d={step.path} fill={['#ddf7d2', '#b8ed9f', '#9ae680'][i]} stroke="#FFFFFF" strokeWidth="5" />
                     <foreignObject {...step.position} className="pointer-events-none">
                       <div className={`flex h-full flex-col items-center justify-center overflow-hidden px-3 text-center transition-opacity duration-200 ${isActive ? 'opacity-0' : ''}`}>
                         <span className="mb-1 text-xs font-semibold tracking-widest text-indigo-700">{step.n}</span>
@@ -121,7 +121,7 @@ export default function Landing({ navigate }) {
                     </foreignObject>
                   </g>);
               })}
-              <circle cx="250" cy="250" r="64" fill="#FFFFFF" stroke="#E0E7FF" strokeWidth="5" />
+              <circle cx="250" cy="250" r="64" fill="#FFFFFF" stroke="#b8ed9f" strokeWidth="5" />
               <text x="250" y="242" textAnchor="middle" className="fill-slate-900 font-display text-[15px] font-extrabold">Collaborate</text>
               <text x="250" y="264" textAnchor="middle" className="fill-slate-900 font-display text-[15px] font-extrabold">in three steps</text>
               </svg>

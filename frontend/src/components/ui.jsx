@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 const buttonStyles = {
-    primary: 'bg-[#002147] text-white hover:bg-[#003866] active:bg-[#00152e] shadow-sm',
+    primary: 'bg-[#71db4a] text-slate-950 hover:bg-[#5fc43b] active:bg-[#4faa31] shadow-sm',
     secondary: 'bg-[#fff7df] text-[#7a5200] hover:bg-[#ffefb8] active:bg-[#ffe79a]',
     outline: 'border border-[#b9c9d8] text-[#002147] hover:bg-white/70 active:bg-white/90 bg-white/40',
     ghost: 'text-[#24415d] hover:bg-white/60 active:bg-white/80',
