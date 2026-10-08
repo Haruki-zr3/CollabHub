@@ -9,7 +9,7 @@ const navItems = [
     { id: 'my-problems', label: 'My Problems', icon: <FileText />, group: 'main' },
     { id: 'my-collaborations', label: 'Collaborations', icon: <Users />, group: 'work' },
     { id: 'tasks', label: 'Tasks', icon: <CheckSquare />, badge: 3, group: 'work' },
-    { id: 'messages', label: 'Messages', icon: <MessageSquare />, badge: 3, group: 'work' },
+    { id: 'messages', label: 'Messages', icon: <MessageSquare />, group: 'work' },
     { id: 'notifications', label: 'Notifications', icon: <Bell />, badge: 3, group: 'work' },
     { id: 'profile', label: 'My Profile', icon: <User />, group: 'account' },
     { id: 'settings', label: 'Settings', icon: <Settings />, group: 'account' },

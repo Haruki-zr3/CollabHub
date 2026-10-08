@@ -32,7 +32,7 @@ export default function StudentProfile({ navigate, context }) {
     const hasLinkedin = !!student.linkedin;
     const cgpaDisplay = student.cgpa && student.cgpa > 0 ? student.cgpa.toFixed(1) : isSelf ? '—' : student.cgpa.toFixed(1);
     return (<div className="p-6 max-w-5xl mx-auto">
-      {!isSelf && (<button onClick={() => navigate('find-collaborators')} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 mb-6 group">
+      {!isSelf && (<button onClick={() => navigate(context.returnPage || 'find-collaborators')} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 mb-6 group">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform"/>
           Back
         </button>)}

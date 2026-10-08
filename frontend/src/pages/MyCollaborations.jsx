@@ -4,9 +4,9 @@ import { Avatar, AvatarGroup, Badge, Button, Card, ProgressBar, Tabs } from '../
 import { Calendar, CheckSquare, Users, ArrowRight, Plus, Zap, Clock } from 'lucide-react';
 import { apiRequest, withUserId } from '../api';
 const completed = [
-    { id: 'cc1', title: 'Campus Lost & Found Web App', description: 'A full-stack web app for reporting and finding lost items on campus.', branch: 'CS', members: 3, completedDate: 'Oct 2024', contributions: 12, role: 'Lead Developer' },
-    { id: 'cc2', title: 'NLP Sentiment Analysis on Student Reviews', description: 'Analyzed 5,000+ student course reviews using BERT for sentiment classification.', branch: 'CS × Data Science', members: 2, completedDate: 'Aug 2024', contributions: 9, role: 'ML Engineer' },
-    { id: 'cc3', title: 'Smart Attendance System with Face Recognition', description: 'Raspberry Pi-based attendance system using face recognition for classroom automation.', branch: 'CS × ECE', members: 4, completedDate: 'Jun 2024', contributions: 15, role: 'Backend Engineer' },
+    { id: 'cc1', title: 'Campus Lost & Found Web App', description: 'A full-stack web app for reporting and finding lost items on campus.', branch: 'CS', members: 3, completedDate: 'Oct 2026', contributions: 12, role: 'Lead Developer' },
+    { id: 'cc2', title: 'NLP Sentiment Analysis on Student Reviews', description: 'Analyzed 5,000+ student course reviews using BERT for sentiment classification.', branch: 'CS × Data Science', members: 2, completedDate: 'Aug 2026', contributions: 9, role: 'ML Engineer' },
+    { id: 'cc3', title: 'Smart Attendance System with Face Recognition', description: 'Raspberry Pi-based attendance system using face recognition for classroom automation.', branch: 'CS × ECE', members: 4, completedDate: 'Jun 2026', contributions: 15, role: 'Backend Engineer' },
 ];
 export default function MyCollaborations({ navigate }) {
     const { user } = useAuth();

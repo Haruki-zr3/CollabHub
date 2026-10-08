@@ -76,10 +76,10 @@ export default function Landing({ navigate }) {
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-20 max-w-3xl mx-auto">
             {[
-            { v: '340+', l: 'SMVDU students' },
-            { v: '180+', l: 'Problems solved' },
+            { v: '90+', l: 'SMVDU students' },
+            { v: '12+', l: 'Problems solved' },
             { v: '8', l: 'Departments' },
-            { v: '95%', l: 'Success rate' },
+            { v: '3', l: 'Collaboration steps' },
         ].map(stat => (<div key={stat.l} className="text-center">
                 <p className="text-3xl font-bold text-indigo-600 font-display">{stat.v}</p>
                 <p className="text-sm text-slate-500 mt-1">{stat.l}</p>

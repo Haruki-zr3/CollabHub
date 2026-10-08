@@ -59,7 +59,7 @@ export default function Register({ navigate }) {
             .catch(err => setError(err.message))
             .finally(() => setLoading(false));
     }
-    return (<div className="min-h-screen bg-slate-50 flex">
+    return (<div className="auth-page-roll min-h-screen bg-slate-50 flex">
       {/* Left panel */}
       <div className="hidden lg:flex lg:w-5/12 bg-slate-900 flex-col p-12 justify-between">
         <div className="flex items-center gap-2">

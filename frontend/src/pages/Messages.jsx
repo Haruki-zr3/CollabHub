@@ -2,12 +2,16 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAuth, authUserToStudent } from '../context/AuthContext';
 import { conversations as initialConvos } from '../data/mockData';
 import { Avatar, SearchInput } from '../components/ui';
-import { Send, Phone, Video, MoreHorizontal, Paperclip, Smile } from 'lucide-react';
+import { Send, Paperclip, Smile } from 'lucide-react';
 export default function Messages({ navigate }) {
     const { user } = useAuth();
     const authStudent = user ? authUserToStudent(user) : null;
-    const [convos, setConvos] = useState(initialConvos);
-    const [activeConvo, setActiveConvo] = useState(convos[0]);
+    const snehaConvo = initialConvos.find(convo => convo.with.name === 'Sneha Reddy');
+    const openedConvo = snehaConvo
+        ? { ...snehaConvo, unread: 0, messages: snehaConvo.messages.map(msg => ({ ...msg, read: true })) }
+        : null;
+    const [convos, setConvos] = useState(openedConvo ? [openedConvo] : []);
+    const [activeConvo, setActiveConvo] = useState(openedConvo);
     const [message, setMessage] = useState('');
     const [search, setSearch] = useState('');
     const messagesEndRef = useRef(null);
@@ -31,8 +35,10 @@ export default function Messages({ navigate }) {
         setMessage('');
     }
     function openConvo(convo) {
-        setActiveConvo({ ...convo, unread: 0 });
-        setConvos(cs => cs.map(c => c.id === convo.id ? { ...c, unread: 0 } : c));
+        const readMessages = convo.messages.map(msg => ({ ...msg, read: true }));
+        const readConvo = { ...convo, messages: readMessages, unread: 0 };
+        setActiveConvo(readConvo);
+        setConvos(cs => cs.map(c => c.id === convo.id ? readConvo : c));
     }
     const filtered = convos.filter(c => c.with.name.toLowerCase().includes(search.toLowerCase()));
     return (<div className="flex h-[calc(100vh-64px)] bg-white">
@@ -88,13 +94,7 @@ export default function Messages({ navigate }) {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 transition-colors">
-              <Phone className="w-4 h-4"/>
-            </button>
-            <button className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 transition-colors">
-              <Video className="w-4 h-4"/>
-            </button>
-            <button onClick={() => navigate('profile', { studentId: activeConvo.with.id })} className="px-3 h-8 text-sm text-indigo-600 font-medium border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors">
+            <button onClick={() => navigate('profile', { studentId: activeConvo.with.id, sidebarPage: 'messages', returnPage: 'messages' })} className="px-3 h-8 text-sm text-indigo-600 font-medium border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors">
               View Profile
             </button>
           </div>

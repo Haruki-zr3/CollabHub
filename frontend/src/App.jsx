@@ -90,10 +90,10 @@ function AppInner() {
         }
     }
     if (isPublic) {
-        return <div className="fade-in">{renderPage()}</div>;
+        return <div key={page} className="fade-in">{renderPage()}</div>;
     }
-    return (<AppShell currentPage={page} navigate={navigate}>
-      <div className="fade-in">
+    return (<AppShell currentPage={page} sidebarPage={context.sidebarPage} navigate={navigate}>
+      <div key={page} className="fade-in">
         {renderPage()}
       </div>
     </AppShell>);

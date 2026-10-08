@@ -36,47 +36,19 @@ export default function Login({ navigate }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
-      <div className="hidden lg:flex lg:w-1/2 gradient-cta flex-col justify-between p-12">
-        <div className="flex items-center gap-2">
-          <BrandLogo />
-          <span className="font-bold text-white font-display text-base">CollabHub · SMVDU</span>
-        </div>
-        <div>
-          <blockquote className="text-white text-2xl font-medium font-display leading-snug mb-6">
-            "Found my perfect research partner in 3 days. Couldn't have completed my final-year project without CollabHub."
-          </blockquote>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold">SR</div>
-            <div>
-              <p className="text-white font-medium text-sm">Sneha Reddy</p>
-              <p className="text-indigo-200 text-xs">Data Science, Year 3 · SMVDU</p>
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          {[['340+', 'SMVDU Students'], ['180+', 'Problems Solved'], ['95%', 'Success Rate']].map(([v, l]) => (
-            <div key={l} className="bg-white/10 rounded-xl p-4">
-              <p className="text-2xl font-bold text-white font-display">{v}</p>
-              <p className="text-indigo-200 text-xs mt-0.5">{l}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
-        <div className="w-full max-w-sm">
-          <div className="lg:hidden flex items-center gap-2 mb-8">
-            <BrandLogo />
-            <span className="font-bold text-slate-900 font-display">CollabHub · SMVDU</span>
+    <div className="auth-page-roll min-h-screen bg-slate-50 flex flex-col items-center justify-center px-6 py-12">
+      <div className="w-full max-w-md">
+          <div className="flex items-center justify-center gap-2 mb-10">
+            <BrandLogo className="w-11 h-11" />
+            <span className="font-bold text-slate-900 font-display text-lg">CollabHub · SMVDU</span>
           </div>
 
-          <h2 className="text-2xl font-bold text-slate-900 font-display mb-1.5">Welcome back</h2>
-          <p className="text-slate-500 text-sm mb-8">Sign in to your account to continue</p>
+          <h2 className="text-[27px] font-bold text-slate-900 font-display mb-2">Welcome back</h2>
+          <p className="text-base text-slate-500 mb-9">Sign in to your account to continue</p>
 
           {error && <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">{error}</div>}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <Input label="SMVDU University Email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="yourname@smvdu.ac.in" hint="Use your official SMVDU university email address." icon={<Mail className="w-4 h-4" />} />
             <Input label="Password" type={showPass ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter your password" icon={<Lock className="w-4 h-4" />} iconRight={<button type="button" onClick={() => setShowPass(v => !v)} className="text-slate-400 hover:text-slate-600 transition-colors">{showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}</button>} />
             <div className="flex justify-end">
@@ -85,11 +57,10 @@ export default function Login({ navigate }) {
             <Button type="submit" loading={loading} className="w-full" size="lg">Sign in</Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-500">
+          <p className="mt-7 text-base text-center text-slate-500">
             Don't have an account?{' '}
             <button onClick={() => navigate('register')} className="text-indigo-600 font-medium hover:text-indigo-700">Create one free</button>
           </p>
-        </div>
       </div>
     </div>
   );

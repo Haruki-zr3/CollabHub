@@ -40,7 +40,7 @@ export default function Dashboard({ navigate }) {
     }, [user]);
     const firstName = user?.name.split(' ')[0] ?? 'there';
     const recommendedProblems = problemList.filter(p => p.status === 'open').slice(0, 3);
-    const recommendedStudents = students.filter(s => s.compatibility).slice(0, 3);
+    const recommendedStudents = students.filter(s => s.compatibility).slice(0, 1);
     const priorityDotColor = {
         low: '#94A3B8',
         medium: '#0EA5E9',
@@ -98,7 +98,7 @@ export default function Dashboard({ navigate }) {
               Discover Problems
             </Button>
           </div>) : (<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {activeCollaborations.map(collab => (<Card key={collab.id} hover padding onClick={() => navigate('problem-details', { problemId: collab.problem.id })} className="problem-card">
+            {activeCollaborations.slice(0, 1).map(collab => (<Card key={collab.id} hover padding onClick={() => navigate('problem-details', { problemId: collab.problem.id })} className="problem-card">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">
                     <h4 className="font-semibold text-slate-900 font-display leading-snug mb-1">{collab.problem.title}</h4>
@@ -208,7 +208,7 @@ export default function Dashboard({ navigate }) {
               <p className="font-medium text-slate-600 mb-1 text-sm">No tasks assigned yet</p>
               <p className="text-xs text-slate-400">Join a collaboration to get tasks</p>
             </div>) : (<Card padding={false} className="overflow-hidden">
-              {upcomingTasks.map((task, i) => (<div key={task.id} className={`flex items-center gap-3 px-4 py-3 ${i > 0 ? 'border-t border-slate-100' : ''} hover:bg-slate-50 transition-colors`}>
+              {upcomingTasks.slice(0, 1).map((task, i) => (<div key={task.id} className={`flex items-center gap-3 px-4 py-3 ${i > 0 ? 'border-t border-slate-100' : ''} hover:bg-slate-50 transition-colors`}>
                   <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: priorityDotColor[task.priority] }}/>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-slate-800 truncate">{task.title}</p>
@@ -232,7 +232,7 @@ export default function Dashboard({ navigate }) {
             <h3 className="font-semibold text-slate-900 font-display">Recent Activity</h3>
           </div>
           <Card padding={false} className="overflow-hidden">
-            {recentActivity.map((item, i) => (<div key={item.id} className={`flex items-start gap-3 px-4 py-3 ${i > 0 ? 'border-t border-slate-100' : ''}`}>
+            {recentActivity.slice(0, 1).map((item, i) => (<div key={item.id} className={`flex items-start gap-3 px-4 py-3 ${i > 0 ? 'border-t border-slate-100' : ''}`}>
                 <Avatar student={item.student} size="sm"/>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-slate-700">

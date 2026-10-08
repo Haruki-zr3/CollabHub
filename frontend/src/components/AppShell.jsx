@@ -19,13 +19,13 @@ const pageTitles = {
     'post-problem': 'Post a Problem',
     'problem-details': 'Problem Details',
 };
-export default function AppShell({ currentPage, navigate, children }) {
+export default function AppShell({ currentPage, sidebarPage, navigate, children }) {
     const { user } = useAuth();
     const unread = notifications.filter(n => !n.read).length;
     const title = pageTitles[currentPage] || '';
     const avatarStudent = user ? authUserToStudent(user) : null;
     return (<div className="min-h-screen bg-slate-50 flex">
-      <Sidebar currentPage={currentPage} navigate={navigate}/>
+      <Sidebar currentPage={sidebarPage || currentPage} navigate={navigate}/>
 
       <div className="flex-1 ml-60 flex flex-col min-h-screen">
         {/* Top bar */}

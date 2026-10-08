@@ -20,6 +20,33 @@ const smvduBranches = [
     'Biotechnology',
     'Other',
 ];
+function IntegrationLogo({ name }) {
+    if (name === 'GitHub') {
+        return (<svg viewBox="0 0 24 24" className="h-7 w-7 fill-[#181717]" aria-hidden="true">
+          <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.05c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.74.08-.74 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.8 1.3 3.49.99.11-.77.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.6-2.8 5.63-5.48 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .5Z"/>
+        </svg>);
+    }
+    if (name === 'Google Drive') {
+        return (<svg viewBox="0 0 48 48" className="h-7 w-7" aria-hidden="true">
+          <path fill="#0F9D58" d="M16.1 6 4 27h12.1l12.1-21z"/>
+          <path fill="#4285F4" d="M4 27h12.1l7 12H11z"/>
+          <path fill="#F4B400" d="M28.2 6 40 27H27.9l-7-12z"/>
+          <path fill="#34A853" d="M16.1 27h23.7l-6.9 12H23.1z"/>
+        </svg>);
+    }
+    if (name === 'Notion') {
+        return (<svg viewBox="0 0 32 32" className="h-7 w-7" aria-hidden="true">
+          <rect width="32" height="32" rx="5" fill="#111"/>
+          <path fill="#fff" d="M7 7.5 21.2 6l3.8 2.1v16.4L20.8 26 7 24.2V7.5Zm3.1 2.2v12.2l2.8.3V13l6 8.7 2.3.3V9.2l-2.7-.4v8.7l-5.8-8.1-2.6.3Z"/>
+        </svg>);
+    }
+    return (<svg viewBox="0 0 24 24" className="h-7 w-7" aria-hidden="true">
+      <path fill="#E01E5A" d="M5.1 14.2a2.8 2.8 0 1 1 0-5.6h2.8v5.6H5.1Zm0 1.4h2.8v2.8a2.8 2.8 0 1 1-2.8-2.8Z"/>
+      <path fill="#36C5F0" d="M8.5 5.1a2.8 2.8 0 1 1 5.6 0v2.8H8.5V5.1Zm1.4 0v2.8h2.8V5.1a1.4 1.4 0 1 0-2.8 0Z"/>
+      <path fill="#2EB67D" d="M18.9 9.5a2.8 2.8 0 1 1 0 5.6h-2.8V9.5h2.8Zm0 1.4h-2.8v2.8h2.8a1.4 1.4 0 1 0 0-2.8Z"/>
+      <path fill="#ECB22E" d="M15.5 18.9a2.8 2.8 0 1 1-5.6 0v-2.8h5.6v2.8Zm-1.4 0v-2.8h-2.8v2.8a1.4 1.4 0 1 0 2.8 0Z"/>
+    </svg>);
+}
 export default function Settings({ navigate }) {
     const { user, updateUser, clearUser } = useAuth();
     const [tab, setTab] = useState('profile');
@@ -206,13 +233,13 @@ export default function Settings({ navigate }) {
 
       {tab === 'integrations' && (<div className="space-y-4 fade-in">
           {[
-                { name: 'GitHub', desc: 'Connect GitHub to showcase your repositories on your profile.', icon: '⌥', connected: false },
-                { name: 'Google Drive', desc: 'Connect Drive to share files directly in collaboration workspaces.', icon: '▲', connected: false },
-                { name: 'Notion', desc: 'Sync project notes and documents from Notion.', icon: '◼', connected: false },
-                { name: 'Slack', desc: 'Get notifications in your Slack workspace.', icon: '#', connected: false },
+               { name: 'GitHub', desc: 'Connect GitHub to showcase your repositories on your profile.', connected: false },
+               { name: 'Google Drive', desc: 'Connect Drive to share files directly in collaboration workspaces.', connected: false },
+               { name: 'Notion', desc: 'Sync project notes and documents from Notion.', connected: false },
+               { name: 'Slack', desc: 'Get notifications in your Slack workspace.', connected: false },
             ].map(int => (<div key={int.name} className="bg-white rounded-xl border border-slate-200 p-5 flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-lg font-bold text-slate-600 shrink-0">
-                {int.icon}
+              <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0">
+                <IntegrationLogo name={int.name}/>
               </div>
               <div className="flex-1">
                 <p className="font-semibold text-slate-800">{int.name}</p>
