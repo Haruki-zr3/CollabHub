@@ -51,7 +51,7 @@ export default function Landing({ navigate }) {
           </div>
           <div className="justify-self-end flex items-center gap-3">
             <Button variant="ghost" size="lg" onClick={() => navigate('login')}>Log in</Button>
-            <Button variant="primary" size="lg" onClick={() => navigate('register')}>Get started</Button>
+            <Button variant="primary" size="lg" onClick={() => navigate('register')}>Sign Up</Button>
           </div>
         </div>
       </nav>
@@ -220,7 +220,7 @@ export default function Landing({ navigate }) {
       <section className="gradient-cta py-24">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold text-white font-display mb-5">Ready to start helping each other?</h2>
-          <p className="text-indigo-200 mb-10 text-lg">Join 340+ SMVDU students already solving problems together across every department.</p>
+          <p className="text-indigo-200 mb-10 text-lg">Join 90+ SMVDU students already solving problems together across every department.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" variant="secondary" onClick={() => navigate('register')}>
               Create an account
