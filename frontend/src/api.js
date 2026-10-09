@@ -7,7 +7,10 @@ export async function apiRequest(path, options = {}) {
   });
   const body = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(body.detail || body.message || 'The server request failed.');
+    const detail = Array.isArray(body.detail)
+      ? body.detail.map(item => item.msg || 'Invalid request').join(' ')
+      : body.detail;
+    throw new Error(detail || body.message || 'The server request failed.');
   }
   return body;
 }

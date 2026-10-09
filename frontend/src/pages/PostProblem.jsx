@@ -4,7 +4,7 @@ import { ArrowLeft, Plus, X, CheckCircle, Lightbulb } from 'lucide-react';
 import { apiRequest } from '../api';
 import { useAuth } from '../context/AuthContext';
 const allSkills = ['Python', 'JavaScript', 'React', 'Node.js', 'Machine Learning', 'TensorFlow', 'PyTorch', 'NLP', 'Computer Vision', 'Data Analysis', 'SQL', 'R', 'Arduino', 'IoT', 'MATLAB', 'ANSYS', 'SolidWorks', 'AutoCAD', 'C++', 'Java', 'Android', 'Flutter', 'AWS', 'Docker', 'Git', 'Signal Processing', 'UI/UX Design', 'Bioinformatics', 'HuggingFace', 'Embedded C'];
-const branches = ['Computer Science', 'Electronics & Communication', 'Mechanical Engineering', 'Civil Engineering', 'Chemical Engineering', 'Data Science', 'Biotechnology', 'Physics', 'Mathematics', 'Cross-disciplinary'];
+const branches = ['Computer Science', 'Electronics & Communication', 'Electrical Engineering', 'Mechanical Engineering', 'Civil Engineering', 'Chemical Engineering', 'Data Science', 'Biotechnology', 'Physics', 'Mathematics', 'Cross-disciplinary'];
 export default function PostProblem({ navigate }) {
     const { user } = useAuth();
     const [form, setForm] = useState({

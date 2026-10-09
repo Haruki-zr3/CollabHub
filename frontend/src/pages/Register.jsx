@@ -44,16 +44,29 @@ export default function Register({ navigate }) {
         e.preventDefault();
         if (step === 1) {
             setEmailTouched(true);
-            if (!emailValid || !form.name || !form.password)
+            if (!emailValid || form.name.trim().length < 2 || form.password.length < 6) {
+                setError('Enter a name with at least 2 characters and a password with at least 6 characters.');
                 return;
+            }
+            setError('');
             setStep(2);
+            return;
+        }
+        if (!form.branch || !form.year) {
+            setError('Please select your branch and year of study.');
             return;
         }
         setLoading(true);
         setError('');
         apiRequest('/auth/register', {
             method: 'POST',
-            body: JSON.stringify({ ...form, year: form.year ? parseInt(form.year, 10) : 1 }),
+            body: JSON.stringify({
+                ...form,
+                name: form.name.trim(),
+                email: form.email.trim().toLowerCase(),
+                year: parseInt(form.year, 10),
+                entryNumber: form.entryNumber.trim(),
+            }),
         })
             .then(({ user }) => { setUser(user); navigate('onboarding'); })
             .catch(err => setError(err.message))
@@ -198,7 +211,7 @@ export default function Register({ navigate }) {
                 <Input label="Entry / Enrollment Number" type="text" value={form.entryNumber} onChange={e => set('entryNumber', e.target.value)} placeholder="e.g. 22BCS001" hint="Optional — helps verify your student status."/>
               </>)}
 
-            <Button type="submit" loading={loading} className="w-full mt-2" size="lg" disabled={step === 1 && (!form.name || !emailValid || !form.password)}>
+            <Button type="submit" loading={loading} className="w-full mt-2" size="lg" disabled={step === 1 && (!form.name.trim() || !emailValid || form.password.length < 6)}>
               {step === 1 ? 'Continue' : 'Create account'}
             </Button>
           </form>
